@@ -29,6 +29,7 @@ void KalmanFilter::Predict() {
 	//update state transition coveriance based on state transition matrix and process covariance matrix (based on delta t) 
 	VectorXd F_t = F_.transpose();
 	P_ = F_ * P_ * F_t + Q_;
+	cout << "Checkpoint 0" << endl;
 
 }
 
@@ -47,7 +48,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 	VectorXd K = P_ * H_transpose * S_inv;
 	x_ = x_ + K * y;
 	P_ = (I - K * H_) * P_;
-
+	cout << "Checkpoint 1" << endl;
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -91,5 +92,5 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 
 	x_ = x_ + K * y;
 	P_ = (I - K * H_) * P_;
-
+	cout << "Checkpoint 2" << endl;
 }
