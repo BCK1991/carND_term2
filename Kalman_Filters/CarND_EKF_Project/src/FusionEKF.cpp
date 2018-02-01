@@ -73,11 +73,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     ekf_.x_ = VectorXd(4);
 	ekf_.x_ <<	1,1,1,1 ;
 
-	ekf_.F_ = MatrixXd(4, 4);
-	ekf_.F_ << 1, 0, 1, 0,
-		0, 1, 0, 1,
-		0, 0, 1, 0,
-		0, 0, 0, 1;
+	ekf_.F_ = MatrixXd::Identity(4, 4);
+	//ekf_.F_ << 1, 0, 1, 0,
+	//	0, 1, 0, 1,
+	//	0, 0, 1, 0,
+	//	0, 0, 0, 1;
 
 	ekf_.P_ = MatrixXd(4, 4);
 	ekf_.P_ << 1, 0, 0, 0,
