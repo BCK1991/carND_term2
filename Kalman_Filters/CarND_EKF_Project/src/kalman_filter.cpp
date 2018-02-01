@@ -26,12 +26,12 @@ void KalmanFilter::Predict() {
   TODO:
     * predict the state
   */
-	std::cout << "Checkpoint 0-0" << std::endl;
+	//std::cout << "Checkpoint 0-0" << std::endl;
 	x_ = F_ * x_;
 	//update state transition coveriance based on state transition matrix and process covariance matrix (based on delta t) 
 	MatrixXd F_t = F_.transpose();
 	P_ = F_ * P_ * F_t + Q_;
-	std::cout << "Checkpoint 0" << std::endl;
+	//std::cout << "Checkpoint 0" << std::endl;
 
 }
 
@@ -41,7 +41,7 @@ void KalmanFilter::Update(const VectorXd &z) {
     * update the state by using Kalman Filter equations
   */
 	//calculate error between prediction and the ground truth
-	std::cout << "Checkpoint 1-0" << std::endl;
+	//std::cout << "Checkpoint 1-0" << std::endl;
 	
 	VectorXd y = z - H_ * x_; 
 	MatrixXd H_transpose = H_.transpose();
@@ -54,7 +54,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 	MatrixXd I = MatrixXd::Identity(x_size, x_size);
 
 	P_ = (I - K * H_) * P_;
-	std::cout << "Checkpoint 1" << std::endl;
+	//std::cout << "Checkpoint 1" << std::endl;
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -62,7 +62,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
-	std::cout << "Checkpoint 2-0" << std::endl;
+	//std::cout << "Checkpoint 2-0" << std::endl;
 	float px = x_(0);
 	float py = x_(1);
 	float vx = x_(2);
@@ -104,5 +104,5 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	int x_size = x_.size();
 	MatrixXd I = MatrixXd::Identity(x_size, x_size);
 	P_ = (I - K * H_) * P_;
-	std::cout << "Checkpoint 2" << std::endl;
+	//std::cout << "Checkpoint 2" << std::endl;
 }
