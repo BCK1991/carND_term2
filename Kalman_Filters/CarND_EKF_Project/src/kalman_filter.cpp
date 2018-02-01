@@ -27,7 +27,8 @@ void KalmanFilter::Predict() {
   */
 	x_ = F_ * x_;
 	//update state transition coveriance based on state transition matrix and process covariance matrix (based on delta t) 
-	P_ = F_ * P_ * F_.transpose() + Q_;
+	VectorXd F_t = F_.transpose();
+	P_ = F_ * P_ * F_t + Q_;
 
 }
 
@@ -40,8 +41,10 @@ void KalmanFilter::Update(const VectorXd &z) {
 	int z_size = z.size();
 	MatrixXd I = MatrixXd::Identity(z_size, z_size);
 	VectorXd y = z - H_ * x_; 
-	VectorXd S = H_ * P_ * H_.transpose() + R_;
-	VectorXd K = P_ * H_.transpose() * S.inverse();
+	VectorXd H_transpose = H_.transpose();
+	VectorXd S = H_ * P_ * H_transpose + R_;
+	VectorXd S_inv = S.inverse();
+	VectorXd K = P_ * H_transpose * S_inv;
 	x_ = x_ + K * y;
 	P_ = (I - K * H_) * P_;
 
@@ -81,8 +84,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	}
 
 	y = z - H_ * x_;
-	VectorXd S = H_ * P_ * H_.transpose() + R_;
-	VectorXd K = P_ * H_.transpose() * S.inverse();
+	VectorXd H_transpose = H_.transpose();
+	VectorXd S = H_ * P_ * H_transpose + R_;
+	VectorXd S_inv = S.inverse();
+	VectorXd K = P_ * H_transpose * S_inv;
 
 	x_ = x_ + K * y;
 	P_ = (I - K * H_) * P_;
