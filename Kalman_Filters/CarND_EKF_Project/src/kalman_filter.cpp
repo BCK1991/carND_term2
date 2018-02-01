@@ -28,7 +28,7 @@ void KalmanFilter::Predict() {
   */
 	//std::cout << "Checkpoint 0-0" << std::endl;
 	x_ = F_ * x_;
-	//update state transition coveriance based on state transition matrix and process covariance matrix (based on delta t) 
+	//update state transition coveriance matrix based on state transition matrix and process covariance matrix (based on delta t) 
 	MatrixXd F_t = F_.transpose();
 	P_ = F_ * P_ * F_t + Q_;
 	//std::cout << "Checkpoint 0" << std::endl;
@@ -40,7 +40,6 @@ void KalmanFilter::Update(const VectorXd &z) {
   TODO:
     * update the state by using Kalman Filter equations
   */
-	//calculate error between prediction and the ground truth
 	//std::cout << "Checkpoint 1-0" << std::endl;
 	
 	VectorXd y = z - H_ * x_; 
@@ -78,15 +77,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	VectorXd y = VectorXd(3);
 	y = z - h;
 
-	//check limits (-pi,pi)
-	/*while (y(1) > M_PI || y(1) < -M_PI) {
-		if (y(1) > M_PI) {
-			y(1) -= M_PI;
-		}
-		else {
-			y(1) += M_PI;
-		}
-	}*/
+	//angle normalization
 	if (y(1) > M_PI){
 		//y(1) = (int(y(1) - M_PI) % int(2 * M_PI)) - M_PI;
 		y(1) = y(1) - 2 * M_PI;
@@ -96,7 +87,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 		y(1) = y(1) + 2 * M_PI;
 	}
 
-	//y = z - H_ * x_;
 	MatrixXd H_transpose = H_.transpose();
 	MatrixXd S = H_ * P_ * H_transpose + R_;
 	MatrixXd S_inv = S.inverse();
