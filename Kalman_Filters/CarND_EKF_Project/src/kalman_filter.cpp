@@ -26,6 +26,7 @@ void KalmanFilter::Predict() {
   TODO:
     * predict the state
   */
+	std::cout << "Checkpoint 0-0" << std::endl;
 	x_ = F_ * x_;
 	//update state transition coveriance based on state transition matrix and process covariance matrix (based on delta t) 
 	VectorXd F_t = F_.transpose();
@@ -40,6 +41,7 @@ void KalmanFilter::Update(const VectorXd &z) {
     * update the state by using Kalman Filter equations
   */
 	//calculate error between prediction and the ground truth
+	std::cout << "Checkpoint 1-0" << std::endl;
 	int z_size = z.size();
 	MatrixXd I = MatrixXd::Identity(z_size, z_size);
 	VectorXd y = z - H_ * x_; 
