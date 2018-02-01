@@ -37,11 +37,13 @@ void KalmanFilter::Update(const VectorXd &z) {
     * update the state by using Kalman Filter equations
   */
 	//calculate error between prediction and the ground truth
+	int z_size = z.size();
+	MatrixXd I = MatrixXd::Identity(z_size, z_size);
 	VectorXd y = z - H_ * x_; 
-	VectorXd S = H_ * P_ * H.transpose() + R_;
-	VectorXd K = P_ * H.transpose() * S.inverse();
+	VectorXd S = H_ * P_ * H_.transpose() + R_;
+	VectorXd K = P_ * H_.transpose() * S.inverse();
 	x_ = x_ + K * y;
-	P = (I - K * H_) * P_;
+	P_ = (I - K * H_) * P_;
 
 }
 
@@ -50,6 +52,9 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
+	int z_size = z.size();
+	MatrixXd I = MatrixXd::Identity(z_size, z_size);
+
 	float px = x_(0);
 	float py = x_(1);
 	float vx = x_(2);
@@ -62,7 +67,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	VectorXd h = VectorXd(3);
 	h << rho, theta, rho_dot;
 
-	VectorXd y = z - h;
+	y = z - h;
 
 	//check limits (-pi,pi)
 	while (y(1) > M_PI || y(1) < -M_PI) {
@@ -75,8 +80,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	}
 
 	VectorXd y = z - H_ * x_;
-	VectorXd S = H_ * P_ * H.transpose() + R_;
-	VectorXd K = P_ * H.transpose() * S.inverse();
+	VectorXd S = H_ * P_ * H_.transpose() + R_;
+	K = P_ * H_.transpose() * S.inverse();
 
 	x_ = x_ + K * y;
 	P = (I - K * H_) * P_;
