@@ -53,6 +53,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     * Calculate a Jacobian here.
   */
 	MatrixXd Hj(3, 4);
+	Hj << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
 	if (x_state.size() != 4) {
 		cout << "ERROR - CalculateJacobian () - The state vector must have size 4." << endl;
