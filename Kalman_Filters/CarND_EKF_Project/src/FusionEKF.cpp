@@ -39,11 +39,13 @@ FusionEKF::FusionEKF() {
   H_laser_ <<	1, 0, 0, 0,
 				0, 1, 0, 0;
 
-  //measurement jacobian - radar
-  Hj_ <<	1, 1, 0, 0,
-			1, 1, 0, 0,
-			1, 1, 1, 1;
-
+  // State covariance P
+  // initialize P_ - I used values of 1 and 1000 from lesson
+  ekf_.P_ = MatrixXd(4, 4);
+  ekf_.P_ << 1, 0, 0, 0,
+	  0, 1, 0, 0,
+	  0, 0, 1000, 0,
+	  0, 0, 0, 1000;
 
 }
 
@@ -93,8 +95,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 		// Coordinates convertion from polar to cartesian
 		float px = rho * cos(phi);
 		float py = rho * sin(phi);
-		float vx = rho_dot * cos(phi);
-		float vy = rho_dot * sin(phi);
+		float vx = 0;
+		float vy = 0;
 		ekf_.x_ << px, py, vx, vy;
 
     }
