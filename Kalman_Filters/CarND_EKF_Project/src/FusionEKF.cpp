@@ -118,7 +118,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   // State transition matrix update
   ekf_.F_ = MatrixXd(4, 4)
 	  kf_.F_(0, 2) = dt;
-  kf_.F_(1, 3) = dt;
+  ekf_.F_(1, 3) = dt;
   float dt_2 = dt * dt;
   float dt_3 = dt_2 * dt;
   float dt_4 = dt_3 * dt;
