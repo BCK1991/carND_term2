@@ -114,14 +114,16 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;	//dt - expressed in seconds
   previous_timestamp_ = measurement_pack.timestamp_;
 
-
+  //Modify the F matrix so that the time is integrated
+  // State transition matrix update
+  ekf_.F_ = MatrixXd(4, 4)
+	  kf_.F_(0, 2) = dt;
+  kf_.F_(1, 3) = dt;
   float dt_2 = dt * dt;
   float dt_3 = dt_2 * dt;
   float dt_4 = dt_3 * dt;
 
-  //Modify the F matrix so that the time is integrated
-  kf_.F_(0, 2) = dt;
-  kf_.F_(1, 3) = dt;
+
 
   //set the process covariance matrix Q
   kf_.Q_ = MatrixXd(4, 4);
