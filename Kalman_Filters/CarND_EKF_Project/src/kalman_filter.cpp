@@ -79,13 +79,19 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	y = z - h;
 
 	//check limits (-pi,pi)
-	while (y(1) > M_PI || y(1) < -M_PI) {
+	/*while (y(1) > M_PI || y(1) < -M_PI) {
 		if (y(1) > M_PI) {
 			y(1) -= M_PI;
 		}
 		else {
 			y(1) += M_PI;
 		}
+	}*/
+	if (y(3) > M_PI){
+		y(3) = (int(y(3) - M_PI) % int(2 * M_PI)) - M_PI;
+	}
+	if (y(3) < -M_PI){
+		y(3) = (int(y(3) + M_PI) % int(2 * M_PI)) + M_PI;
 	}
 
 	y = z - H_ * x_;
