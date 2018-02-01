@@ -42,14 +42,17 @@ void KalmanFilter::Update(const VectorXd &z) {
   */
 	//calculate error between prediction and the ground truth
 	std::cout << "Checkpoint 1-0" << std::endl;
-	int z_size = z.size();
-	MatrixXd I = MatrixXd::Identity(z_size, z_size);
+	
 	VectorXd y = z - H_ * x_; 
 	MatrixXd H_transpose = H_.transpose();
 	MatrixXd S = H_ * P_ * H_transpose + R_;
 	MatrixXd S_inv = S.inverse();
 	MatrixXd K = P_ * H_transpose * S_inv;
+
 	x_ = x_ + K * y;
+	int x_size = x_.size();
+	MatrixXd I = MatrixXd::Identity(x_size, x_size);
+
 	P_ = (I - K * H_) * P_;
 	std::cout << "Checkpoint 1" << std::endl;
 }
@@ -59,8 +62,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
-	int z_size = z.size();
-	MatrixXd I = MatrixXd::Identity(z_size, z_size);
 
 	float px = x_(0);
 	float py = x_(1);
@@ -94,6 +95,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	MatrixXd K = P_ * H_transpose * S_inv;
 
 	x_ = x_ + K * y;
+	int x_size = x_.size();
+	MatrixXd I = MatrixXd::Identity(x_size, x_size);
 	P_ = (I - K * H_) * P_;
 	std::cout << "Checkpoint 2" << std::endl;
 }
