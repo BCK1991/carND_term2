@@ -33,7 +33,7 @@ public:
 
   ///* time when the state is true, in us
   long long time_us_;
-
+  double timeStamp;
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
 

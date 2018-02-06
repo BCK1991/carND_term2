@@ -71,8 +71,8 @@ UKF::UKF() {
 				0, std_radphi_*std_radphi_, 0,
 				0, 0, std_radrd_*std_radrd_;
 
-  R_lidar_ = MatrixXd(2, 2);
-  R_lidar_ <<	std_laspx_*std_laspx_, 0,
+  R_laser_ = MatrixXd(2, 2);
+  R_laser_ <<	std_laspx_*std_laspx_, 0,
 				0, std_laspy_*std_laspy_;
 
 }
