@@ -25,10 +25,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 30;
+  std_a_ = 3;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 30;
+  std_yawdd_ = 3;
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -54,6 +54,26 @@ UKF::UKF() {
 
   Hint: one or more values initialized above might be wildly off...
   */
+  
+  n_x_ = x_.size();
+
+  n_aug_ = 2 * n_x_ + 1;
+
+  Xsig_pred_ = MatrixXd(n_x_, n_sig_);
+
+  lambda_ = 3 - n_x_;
+
+  weights_ = VectorXd(n_sig_);
+
+  R_radar_ = MatrixXd(3, 3);
+  R_radar_ <<	std_radr_*std_radr_, 0, 0,
+				0, std_radphi_*std_radphi_, 0,
+				0, 0, std_radrd_*std_radrd_;
+
+  R_lidar_ = MatrixXd(2, 2);
+  R_lidar_ <<	std_laspx_*std_laspx_, 0,
+				0, std_laspy_*std_laspy_;
+
 }
 
 UKF::~UKF() {}
@@ -65,10 +85,63 @@ UKF::~UKF() {}
 void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   /**
   TODO:
-
+  
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
+
+	if (!is_initialized) {
+
+		P_ = MatrixXd::Identity(5, 5);
+		P_ = 0.5 * P_;
+
+		if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
+			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
+
+		}
+
+		else if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
+			double rho = meas_package.raw_measurements_[0];
+			double phi = meas_package.raw_measurements_[1];
+			double rho_dot = meas_package.raw_measurements_[2];
+
+			double px = rho * cos(phi);
+			double py = rho * sin(phi);
+			
+			x_ << px, py, rho_dot, 0, 0;
+
+		}
+
+		//Init weights
+		weights_(0) = lambda_ / (lambda_ + n_aug_);
+		for (int i = 1; i < weights_.size(); i++) {
+			weights_(i) = 0.5 / (n_aug_ + lambda_);
+		}
+
+		
+		double timeStamp = measurement_pack.timestamp_;
+		
+		is_initialized_ = true;
+		//cout << "Init" << endl;
+		//cout << "x_" << x_ << endl;
+		return;
+	}
+
+	time_us_ = (measurement_pack.timestamp_ - timeStamp) / 1000000.0;
+	timeStamp = measurement_pack.timestamp_;
+
+	Prediction(time_us_);
+
+	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
+		//cout << "Radar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
+		UpdateRadar(meas_package);
+	}
+	if (meas_package.sensor_type_ == MeasurementPackage::LASER && use_laser_) {
+		//cout << "Lidar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
+		UpdateLidar(meas_package);
+	}
+
+
 }
 
 /**
