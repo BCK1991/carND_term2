@@ -59,12 +59,13 @@ UKF::UKF() {
 
   n_aug_ = 2 * n_x_ + 1;
 
-  Xsig_pred_ = MatrixXd(n_x_, n_sig_);
+  Xsig_pred_ = MatrixXd(n_x_, n_aug_);
 
   lambda_ = 3 - n_x_;
 
-  weights_ = VectorXd(n_sig_);
+  weights_ = VectorXd(n_aug_);
 
+  
   R_radar_ = MatrixXd(3, 3);
   R_radar_ <<	std_radr_*std_radr_, 0, 0,
 				0, std_radphi_*std_radphi_, 0,
@@ -90,7 +91,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   measurements.
   */
 
-	if (!is_initialized) {
+	if (!is_initialized_) {
 
 		P_ = MatrixXd::Identity(5, 5);
 		P_ = 0.5 * P_;
@@ -119,16 +120,16 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		}
 
 		
-		double timeStamp = measurement_pack.timestamp_;
+		timeStamp = meas_package.timestamp_;
 		
 		is_initialized_ = true;
 		//cout << "Init" << endl;
 		//cout << "x_" << x_ << endl;
 		return;
 	}
-
-	time_us_ = (measurement_pack.timestamp_ - timeStamp) / 1000000.0;
-	timeStamp = measurement_pack.timestamp_;
+	
+	time_us_ = (meas_package.timestamp_ - timeStamp) / 1000000.0;
+	timeStamp = meas_package.timestamp_;
 
 	Prediction(time_us_);
 
