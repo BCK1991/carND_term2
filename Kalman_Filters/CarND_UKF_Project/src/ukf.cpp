@@ -122,7 +122,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		}
 
 		std::cout << "you are here PMeas2.5" << std::endl;
-		long timeStamp = meas_package.timestamp_;
+		time_us_ = meas_package.timestamp_;
 		
 		is_initialized_ = true;
 		//cout << "Init" << endl;
@@ -130,10 +130,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		return;
 	}
 	std::cout << "you are here PMeas3" << std::endl;
-	time_us_ = (meas_package.timestamp_ - timeStamp) / 1000000.0;
-	timeStamp = meas_package.timestamp_;
+	double dt = (meas_package.timestamp_ - time_us_) / 1000000.0;
+	time_us_ = meas_package.timestamp_;
 	std::cout << "you are here PMEnd" << std::endl;
-	Prediction(time_us_);
+
+	Prediction(dt);
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
 		//cout << "Radar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
