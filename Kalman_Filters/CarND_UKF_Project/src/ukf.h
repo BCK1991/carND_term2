@@ -79,6 +79,8 @@ public:
   ///* Augmented covariance matrix
   MatrixXd P_aug_;
 
+  ///* Augmanted sigma points
+  MatrixXd Xsig_aug_; 
 
   /**
    * Constructor

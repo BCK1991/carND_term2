@@ -75,6 +75,8 @@ UKF::UKF() {
   R_laser_ <<	std_laspx_*std_laspx_, 0,
 				0, std_laspy_*std_laspy_;
 
+  Xsig_aug_ = MatrixXd(n_x_, n_aug_);
+
 }
 
 UKF::~UKF() {}
@@ -161,7 +163,7 @@ void UKF::Prediction(double delta_t) {
 	//create augmanted state matrix
 	x_aug_ = VectorXd(n_aug_);
 	// mean of the process noises are zero 
-	x_aug_ << x, 0, 0;
+	x_aug_ << x_, 0, 0;
 
 	//create augmanted covariance matrix
 	P_aug_ = MatrixXd(n_aug_, n_aug_);
@@ -214,15 +216,15 @@ void UKF::GenerateSigmaPoints() {
 	//x_k,k2,3 = xk,k - sqrt((lambda + n_x) * P_k,k)
 
 	//Calculate square root of P
-	MatrixXd A = P_.lit().matrixL();
+	MatrixXd A = P_aug_.lit().matrixL();
 
 	//Assign x_ as first column
-	Xsig_pred_.col(0) = x_;
+	Xsig_aug_.col(0) = x_aug_;
 
 	//set remaining sigma points
 	for (int i = 0; i < n_x_; i++){
-		Xsig_pred_.col(i + 1) = x_ + sqrt(lambda + n_x_) * A.col(i);
-		Xsig_pred_.col(i + 1 + n_x_) = x_ + sqrt(lambda + n_x_) * A.col(i);
+		Xsig_aug_.col(i + 1) = x_ + sqrt(lambda_ + n_x_) * A.col(i);
+		Xsig_aug_.col(i + 1 + n_x_) = x_ + sqrt(lambda_ + n_x_) * A.col(i);
 	}
 
 }
