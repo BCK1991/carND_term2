@@ -121,7 +121,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 			weights_(i) = 0.5 / (n_aug_ + lambda_);
 		}
 
-		
+		std::cout << "you are here PMeas2.5" << std::endl;
 		timeStamp = meas_package.timestamp_;
 		
 		is_initialized_ = true;
