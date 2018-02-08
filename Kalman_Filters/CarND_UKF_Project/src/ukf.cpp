@@ -92,7 +92,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
-
+	std::cout << "you are here PMeas" << std::endl;
 	if (!is_initialized_) {
 
 		P_ = MatrixXd::Identity(5, 5);
@@ -132,7 +132,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	
 	time_us_ = (meas_package.timestamp_ - timeStamp) / 1000000.0;
 	timeStamp = meas_package.timestamp_;
-
+	std::cout << "you are here PMEnd" << std::endl;
 	Prediction(time_us_);
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
@@ -159,7 +159,7 @@ void UKF::Prediction(double delta_t) {
   Complete this function! Estimate the object's location. Modify the state
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
-
+	std::cout << "you are here prediction" << std::endl;
 	//create augmanted state matrix
 	x_aug_ = VectorXd(n_aug_);
 	// mean of the process noises are zero 
