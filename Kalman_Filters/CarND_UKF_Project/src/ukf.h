@@ -33,7 +33,7 @@ public:
 
   ///* time when the state is true, in us
   long long time_us_;
-  long timeStamp;
+  
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
 
@@ -63,6 +63,9 @@ public:
 
   ///* Augmented state dimension
   int n_aug_;
+
+  ///* sigma points row dimension
+  int n_sig_;
 
   ///* Sigma point spreading parameter
   double lambda_;
