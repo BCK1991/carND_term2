@@ -127,8 +127,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		time_us_ = meas_package.timestamp_;
 		std::cout << "you are here PMeas2.6" << std::endl;
 		is_initialized_ = true;
-		//cout << "Init" << endl;
-		//cout << "x_" << x_ << endl;
+		cout << "Init" << endl;
+		cout << "x_" << x_ << endl;
 		return;
 	}
 	std::cout << "you are here PMeas3" << std::endl;
