@@ -63,11 +63,11 @@ UKF::UKF() {
 
   n_sig_ = 1 + 2 * n_aug_;
 
-  Xsig_pred_ = MatrixXd(n_x_, n_aug_);
+  Xsig_pred_ = MatrixXd(n_x_, n_sig_);
 
-  lambda_ = 3 - n_x_;
+  lambda_ = 3 - n_aug_;
 
-  weights_ = VectorXd(n_aug_);
+  weights_ = VectorXd(n_sig_);
 
   
   R_radar_ = MatrixXd(3, 3);
@@ -137,7 +137,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		return;
 	}
 	std::cout << "you are here PMeas3" << std::endl;
-	double dt = (meas_package.timestamp_ - time_us_) / 1000000.0;
+	double dt = (meas_package.timestamp_ - time_us_) ;
 	time_us_ = meas_package.timestamp_;
 	std::cout << "you are here PMEnd" << std::endl;
 
