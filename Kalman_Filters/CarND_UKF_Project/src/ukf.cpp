@@ -227,6 +227,8 @@ void UKF::GenerateSigmaPoints() {
 	//Calculate square root of P
 	MatrixXd A = P_aug_.llt().matrixL();
 	std::cout << "GenSigPts 1" << std::endl;
+	std::cout << Xsig_aug_.size() << std::endl;
+	std::cout << x_aug_.size() << std::endl;
 	//Assign x_ as first column
 	Xsig_aug_.col(0) = x_aug_;
 	std::cout << Xsig_aug_ << std::endl;
