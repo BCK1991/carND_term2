@@ -157,6 +157,22 @@ void UKF::Prediction(double delta_t) {
   Complete this function! Estimate the object's location. Modify the state
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
+
+	//create augmanted state matrix
+	x_aug_ = VectorXd(n_aug_);
+	// mean of the process noises are zero 
+	x_aug_ << x, 0, 0;
+
+	//create augmanted covariance matrix
+	P_aug_ = MatrixXd(n_aug_, n_aug_);
+
+	P_aug_.fill(0.0);
+	P_aug_.topLeftCorner(n_x_, n_x_) = P_;
+	P_aug_(5, 5) = std_a_;
+	P_aug_(6, 6) = std_yawdd_;
+	std::cout << P_aug_ << std::endl;
+	GenerateSigmaPoints();
+
 }
 
 /**
@@ -187,4 +203,26 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   You'll also need to calculate the radar NIS.
   */
+	
+	
+
+}
+
+void UKF::GenerateSigmaPoints() {
+	//x_k,k1 = xk,k
+	//x_k,k2,3 = xk,k + sqrt((lambda + n_x) * P_k,k)
+	//x_k,k2,3 = xk,k - sqrt((lambda + n_x) * P_k,k)
+
+	//Calculate square root of P
+	MatrixXd A = P_.lit().matrixL();
+
+	//Assign x_ as first column
+	Xsig_pred_.col(0) = x_;
+
+	//set remaining sigma points
+	for (int i = 0; i < n_x_; i++){
+		Xsig_pred_.col(i + 1) = x_ + sqrt(lambda + n_x_) * A.col(i);
+		Xsig_pred_.col(i + 1 + n_x_) = x_ + sqrt(lambda + n_x_) * A.col(i);
+	}
+
 }

@@ -73,6 +73,12 @@ public:
   ///* Radar measurement noise covariance matrix
   MatrixXd R_radar_;
 
+  ///* Augmented state vector
+  VectorXd x_aug_ ;
+
+  ///* Augmented covariance matrix
+  MatrixXd P_aug_;
+
 
   /**
    * Constructor
@@ -108,6 +114,17 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+
+  /**
+  * Generates sigma points 
+  * @param 
+  */
+  void GenerateSigmaPoints();
+
+
 };
+
+
 
 #endif /* UKF_H */
