@@ -59,7 +59,9 @@ UKF::UKF() {
   
   n_x_ = x_.size();
 
-  n_aug_ = 2 * n_x_ + 1;
+  n_aug_ =  n_x_ + 2;
+
+  n_sig_ = 1 + 2 * n_aug_;
 
   Xsig_pred_ = MatrixXd(n_x_, n_aug_);
 
@@ -97,8 +99,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	std::cout << "you are here PMeas" << std::endl;
 	if (!is_initialized_) {
 
-		P_ = MatrixXd::Identity(5, 5);
-		P_ = 0.5 * P_;
+		P_ << 0.5, 0, 0, 0, 0,
+			0, 0.5, 0, 0, 0,
+			0, 0, 0.5, 0, 0,
+			0, 0, 0, 0.5, 0,
+			0, 0, 0, 0, 0.5;
 		std::cout << "you are here PMeas1" << std::endl;
 		if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
 			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
