@@ -172,6 +172,7 @@ void UKF::Prediction(double delta_t) {
 	P_aug_.topLeftCorner(n_x_, n_x_) = P_;
 	P_aug_(5, 5) = std_a_;
 	P_aug_(6, 6) = std_yawdd_;
+	std::cout << "you are here" << std::endl;
 	std::cout << P_aug_ << std::endl;
 	GenerateSigmaPoints();
 
