@@ -229,11 +229,11 @@ void UKF::GenerateSigmaPoints() {
 	std::cout << "GenSigPts 1" << std::endl;
 	//Assign x_ as first column
 	Xsig_aug_.col(0) = x_aug_;
-
+	std::cout << Xsig_aug_ << std::endl;
 	//set remaining sigma points
 	for (int i = 0; i < n_x_; i++){
-		Xsig_aug_.col(i + 1) = x_ + sqrt(lambda_ + n_x_) * A.col(i);
-		Xsig_aug_.col(i + 1 + n_x_) = x_ + sqrt(lambda_ + n_x_) * A.col(i);
+		Xsig_aug_.col(i + 1) = x_ + sqrt(lambda_ + n_aug_) * A.col(i);
+		Xsig_aug_.col(i + 1 + n_x_) = x_ + sqrt(lambda_ + n_aug_) * A.col(i);
 	}
 	std::cout << "GenSigPts end" << std::endl;
 }
