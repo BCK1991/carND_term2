@@ -97,7 +97,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 		P_ = MatrixXd::Identity(5, 5);
 		P_ = 0.5 * P_;
-
+		std::cout << "you are here PMeas1" << std::endl;
 		if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
 			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
 
@@ -114,7 +114,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 			x_ << px, py, rho_dot, 0, 0;
 
 		}
-
+		std::cout << "you are here PMeas2" << std::endl;
 		//Init weights
 		weights_(0) = lambda_ / (lambda_ + n_aug_);
 		for (int i = 1; i < weights_.size(); i++) {
@@ -129,7 +129,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		//cout << "x_" << x_ << endl;
 		return;
 	}
-	
+	std::cout << "you are here PMeas3" << std::endl;
 	time_us_ = (meas_package.timestamp_ - timeStamp) / 1000000.0;
 	timeStamp = meas_package.timestamp_;
 	std::cout << "you are here PMEnd" << std::endl;
