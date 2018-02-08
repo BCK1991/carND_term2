@@ -216,7 +216,7 @@ void UKF::GenerateSigmaPoints() {
 	//x_k,k2,3 = xk,k - sqrt((lambda + n_x) * P_k,k)
 
 	//Calculate square root of P
-	MatrixXd A = P_aug_.lit().matrixL();
+	MatrixXd A = P_aug_.llt().matrixL();
 
 	//Assign x_ as first column
 	Xsig_aug_.col(0) = x_aug_;
