@@ -122,7 +122,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		}
 
 		std::cout << "you are here PMeas2.5" << std::endl;
-		timeStamp = meas_package.timestamp_;
+		long timeStamp = meas_package.timestamp_;
 		
 		is_initialized_ = true;
 		//cout << "Init" << endl;
