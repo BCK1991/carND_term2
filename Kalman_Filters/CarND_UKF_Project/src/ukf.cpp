@@ -79,7 +79,7 @@ UKF::UKF() {
   R_laser_ <<	std_laspx_*std_laspx_, 0,
 				0, std_laspy_*std_laspy_;
 
-  Xsig_aug_ = MatrixXd(n_x_, n_aug_);
+  Xsig_aug_ = MatrixXd(n_x_, n_sig_);
 
 }
 
@@ -142,7 +142,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	std::cout << "you are here PMEnd" << std::endl;
 
 	Prediction(dt);
-
+	std::cout << "UpdateEnter" << std::endl;
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
 		//cout << "Radar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateRadar(meas_package);
@@ -226,7 +226,7 @@ void UKF::GenerateSigmaPoints() {
 
 	//Calculate square root of P
 	MatrixXd A = P_aug_.llt().matrixL();
-
+	std::cout << "GenSigPts 1" << std::endl;
 	//Assign x_ as first column
 	Xsig_aug_.col(0) = x_aug_;
 
@@ -235,5 +235,5 @@ void UKF::GenerateSigmaPoints() {
 		Xsig_aug_.col(i + 1) = x_ + sqrt(lambda_ + n_x_) * A.col(i);
 		Xsig_aug_.col(i + 1 + n_x_) = x_ + sqrt(lambda_ + n_x_) * A.col(i);
 	}
-
+	std::cout << "GenSigPts end" << std::endl;
 }
