@@ -127,7 +127,7 @@ public:
   */
   void GenerateSigmaPoints();
 
-  void PredictSigmaPoints();
+  void PredictSigmaPoints(double delta_t);
 };
 
 

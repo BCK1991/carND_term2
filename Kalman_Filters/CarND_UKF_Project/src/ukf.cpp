@@ -183,7 +183,7 @@ void UKF::Prediction(double delta_t) {
 	std::cout << "you are here" << std::endl;
 	std::cout << P_aug_ << std::endl;
 	GenerateSigmaPoints();
-	PredictSigmaPoints(df);
+	PredictSigmaPoints(delta_t);
 
 }
 
@@ -243,9 +243,7 @@ void UKF::GenerateSigmaPoints() {
 }
 
 void UKF::PredictSigmaPoints(double delta_t) {
-	//x_k,k1 = xk,k
-	//x_k,k2,3 = xk,k + sqrt((lambda + n_x) * P_k,k)
-	//x_k,k2,3 = xk,k - sqrt((lambda + n_x) * P_k,k)
+
 	std::cout << "PredictSigmaPoints start" << std::endl;
 	for (int i = 0; i< n_sig_; i++)
 	{
