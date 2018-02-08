@@ -79,7 +79,7 @@ UKF::UKF() {
   R_laser_ <<	std_laspx_*std_laspx_, 0,
 				0, std_laspy_*std_laspy_;
 
-  Xsig_aug_ = MatrixXd(n_x_, n_sig_);
+  Xsig_aug_ = MatrixXd(n_aug_, n_sig_);
 
 }
 
