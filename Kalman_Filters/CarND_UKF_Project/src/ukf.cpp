@@ -185,7 +185,7 @@ void UKF::Prediction(double delta_t) {
 	GenerateSigmaPoints();
 	PredictSigmaPoints(delta_t);
 	PredictMeanCovariance();
-	Predict
+	
 
 }
 
