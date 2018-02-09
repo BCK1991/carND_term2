@@ -85,6 +85,10 @@ public:
   ///* Augmanted sigma points
   MatrixXd Xsig_aug_; 
 
+  ///* New predicted measurement
+  VectorXd z_pred_;
+
+  
   /**
    * Constructor
    */
