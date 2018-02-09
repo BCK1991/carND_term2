@@ -266,7 +266,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	S = S + R;
 
 	//create matrix for cross correlation Tc
-	MatrixXd Tc = MatrixXd(n_x, 3);
+	MatrixXd Tc = MatrixXd(n_x_, 3);
 
 	for (int i = 0; i < n_sig_; i++) {  //2n+1 simga points
 
@@ -282,12 +282,14 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 		while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
 		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
 
-		Tc = Tc + weights(i) * x_diff * z_diff.transpose();
+		Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
 	}
 
 	//Kalman gain K;
 	MatrixXd K = Tc * S.inverse();
 
+	VectorXd z = VectorXd(3);
+	z << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], meas_package.raw_measurements_[2];
 	//residual
 	VectorXd z_diff = z - z_pred_;
 
