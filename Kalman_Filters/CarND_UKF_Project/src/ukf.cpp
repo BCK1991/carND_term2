@@ -217,6 +217,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   You'll also need to calculate the radar NIS.
   */
+	std::cout << "Radar Update 1" << std::endl;
 	//create matrix for sigma points in measurement space
 	MatrixXd Zsig = MatrixXd(3, n_sig_);
 	//transform sigma points into measurement space
@@ -284,7 +285,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
 		Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
 	}
-
+	std::cout << "Radar Update 2" << std::endl;
 	//Kalman gain K;
 	MatrixXd K = Tc * S.inverse();
 
@@ -300,6 +301,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	//update state mean and covariance matrix
 	x_ = x_ + K * z_diff;
 	P_ = P_ - K*S*K.transpose();
+	std::cout << "Radar Update 3" << std::endl;
 }
 
 void UKF::GenerateSigmaPoints() {
