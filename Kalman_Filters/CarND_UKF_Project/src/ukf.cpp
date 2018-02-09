@@ -305,7 +305,7 @@ void UKF::PredictMeanCovariance(){
 	for (int i = 0; i < n_sig_; i++) {  //iterate over sigma points
 
 		// state difference
-		VectorXd x_diff = Xsig_pred_.col(i) - x;
+		VectorXd x_diff = Xsig_pred_.col(i) - x_;
 		//angle normalization
 		while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
 		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
