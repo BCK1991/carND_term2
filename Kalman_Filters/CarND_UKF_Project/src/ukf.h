@@ -128,6 +128,8 @@ public:
   void GenerateSigmaPoints();
 
   void PredictSigmaPoints(double delta_t);
+
+  void PredictMeanCovariance();
 };
 
 

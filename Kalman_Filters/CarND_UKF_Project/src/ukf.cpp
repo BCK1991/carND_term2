@@ -184,6 +184,7 @@ void UKF::Prediction(double delta_t) {
 	std::cout << P_aug_ << std::endl;
 	GenerateSigmaPoints();
 	PredictSigmaPoints(delta_t);
+	PredictMeanCovariance();
 
 }
 
@@ -289,4 +290,27 @@ void UKF::PredictSigmaPoints(double delta_t) {
 		Xsig_pred_(4, i) = yawd_p;
 	}
 	std::cout << "PredictSigmaPoints end" << std::endl;
+}
+
+void UKF::PredictMeanCovariance(){
+
+	x_.fill(0.0);
+	//predict state mean
+	for (int i = 0; i < n_sig_; i++){
+		x_ = x_ + weights(i)* Xsig_pred_.col(i);
+	}
+
+	//predict state covariance matrix
+	P_.fill(0.0);
+	for (int i = 0; i < n_sig_; i++) {  //iterate over sigma points
+
+		// state difference
+		VectorXd x_diff = Xsig_pred_.col(i) - x;
+		//angle normalization
+		while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
+		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
+
+		P_ = P_ + weights(i) * x_diff * x_diff.transpose();
+	}
+
 }
