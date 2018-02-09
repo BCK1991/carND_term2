@@ -88,6 +88,12 @@ public:
   ///* New predicted measurement
   VectorXd z_pred_;
 
+  ///*Consistency check variable for radar
+  double NIS_radar_;
+
+  ///*Consistency check variable for lidar
+  double NIS_lidar_;
+
   
   /**
    * Constructor
@@ -134,6 +140,8 @@ public:
   void PredictSigmaPoints(double delta_t);
 
   void PredictMeanCovariance();
+
+  void UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 };
 
 
