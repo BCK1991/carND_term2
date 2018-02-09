@@ -151,7 +151,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		//cout << "Lidar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateLidar(meas_package);
 	}
-
+	std::cout << "Finish" << std::endl;
 
 }
 
