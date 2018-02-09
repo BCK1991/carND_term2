@@ -218,15 +218,15 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   You'll also need to calculate the radar NIS.
   */
 	//create matrix for sigma points in measurement space
-	MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug + 1);
+	MatrixXd Zsig = MatrixXd(3, n_sig_);
 	//transform sigma points into measurement space
-	for (int i = 0; i < 2 * n_aug + 1; i++) {  //2n+1 simga points
+	for (int i = 0; i < n_sig_; i++) {  //2n+1 simga points
 
 		// extract values for better readibility
-		double p_x = Xsig_pred(0, i);
-		double p_y = Xsig_pred(1, i);
-		double v = Xsig_pred(2, i);
-		double yaw = Xsig_pred(3, i);
+		double p_x = Xsig_pred_(0, i);
+		double p_y = Xsig_pred_(1, i);
+		double v = Xsig_pred_(2, i);
+		double yaw = Xsig_pred_(3, i);
 
 		double v1 = cos(yaw)*v;
 		double v2 = sin(yaw)*v;
@@ -238,16 +238,16 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	}
 
 	//mean predicted measurement
-	z_pred_ = VectorXd(n_z);
+	z_pred_ = VectorXd(3);
 	z_pred_.fill(0.0);
-	for (int i = 0; i < 2 * n_aug + 1; i++) {
-		z_pred_ = z_pred_ + weights(i) * Zsig.col(i);
+	for (int i = 0; i < n_sig_; i++) {
+		z_pred_ = z_pred_ + weights_(i) * Zsig.col(i);
 	}
 
 	//innovation covariance matrix S
-	MatrixXd S = MatrixXd(n_z, n_z);
+	MatrixXd S = MatrixXd(3, 3);
 	S.fill(0.0);
-	for (int i = 0; i < 2 * n_aug + 1; i++) {  //2n+1 simga points
+	for (int i = 0; i < n_sig_; i++) {  //2n+1 simga points
 		//residual
 		VectorXd z_diff = Zsig.col(i) - z_pred_;
 
@@ -255,7 +255,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 		while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
 		while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
 
-		S = S + weights(i) * z_diff * z_diff.transpose();
+		S = S + weights_(i) * z_diff * z_diff.transpose();
 	}
 
 	//add measurement noise covariance matrix
