@@ -92,7 +92,7 @@ public:
   double NIS_radar_;
 
   ///*Consistency check variable for lidar
-  double NIS_lidar_;
+  double NIS_laser_;
 
   
   /**
@@ -141,7 +141,7 @@ public:
 
   void PredictMeanCovariance();
 
-  void UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
+  void UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_);
 };
 
 

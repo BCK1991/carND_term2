@@ -373,7 +373,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		R = R_radar_;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
-		R = R_lidar_;
+		R = R_laser_;
 	}
 	S = S + R;
 
