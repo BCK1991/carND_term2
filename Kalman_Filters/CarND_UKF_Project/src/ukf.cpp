@@ -265,6 +265,39 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 		0, 0, std_radrd_*std_radrd_;
 	S = S + R;
 
+	//create matrix for cross correlation Tc
+	MatrixXd Tc = MatrixXd(n_x, 3);
+
+	for (int i = 0; i < n_sig_; i++) {  //2n+1 simga points
+
+		//residual
+		VectorXd z_diff = Zsig.col(i) - z_pred_;
+		//angle normalization
+		while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
+		while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
+
+		// state difference
+		VectorXd x_diff = Xsig_pred_.col(i) - x_;
+		//angle normalization
+		while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
+		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
+
+		Tc = Tc + weights(i) * x_diff * z_diff.transpose();
+	}
+
+	//Kalman gain K;
+	MatrixXd K = Tc * S.inverse();
+
+	//residual
+	VectorXd z_diff = z - z_pred_;
+
+	//angle normalization
+	while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
+	while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
+
+	//update state mean and covariance matrix
+	x_ = x_ + K * z_diff;
+	P_ = P_ - K*S*K.transpose();
 }
 
 void UKF::GenerateSigmaPoints() {
