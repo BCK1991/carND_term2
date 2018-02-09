@@ -297,7 +297,7 @@ void UKF::PredictMeanCovariance(){
 	x_.fill(0.0);
 	//predict state mean
 	for (int i = 0; i < n_sig_; i++){
-		x_ = x_ + weights(i)* Xsig_pred_.col(i);
+		x_ = x_ + weights_(i)* Xsig_pred_.col(i);
 	}
 
 	//predict state covariance matrix
@@ -310,7 +310,7 @@ void UKF::PredictMeanCovariance(){
 		while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
 		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
 
-		P_ = P_ + weights(i) * x_diff * x_diff.transpose();
+		P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
 	}
 
 }
