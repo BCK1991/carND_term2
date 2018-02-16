@@ -109,7 +109,7 @@ int main()
     	  ukf.ProcessMeasurement(meas_package);    	  
 
     	  //Push the current estimated x,y positon from the Kalman filter's state vector
-
+		  std::cout << "you are here main 2" << std::endl;
     	  VectorXd estimate(4);
 
     	  double p_x = ukf.x_(0);
@@ -126,7 +126,7 @@ int main()
     	  estimate(3) = v2;
     	  
     	  estimations.push_back(estimate);
-
+		  std::cout << "you are here main 3" << std::endl;
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
 
           json msgJson;
@@ -147,7 +147,7 @@ int main()
         ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
       }
     }
-
+	std::cout << "you are here main end" << std::endl;
   });
 
   // We don't need this since we're not using HTTP but if it's removed the program
