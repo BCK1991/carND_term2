@@ -127,8 +127,8 @@ int main()
     	  
     	  estimations.push_back(estimate);
 		  std::cout << "you are here main 3" << std::endl;
-    	  VectorXd RMSE = Tools.CalculateRMSE(estimations, ground_truth);
-
+    	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
+		  std::cout << "you are here main 4" << std::endl;
           json msgJson;
           msgJson["estimate_x"] = p_x;
           msgJson["estimate_y"] = p_y;
@@ -146,8 +146,9 @@ int main()
         std::string msg = "42[\"manual\",{}]";
         ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
       }
+	  std::cout << "you are here main end" << std::endl;
     }
-	std::cout << "you are here main end" << std::endl;
+	
   });
 
   // We don't need this since we're not using HTTP but if it's removed the program
