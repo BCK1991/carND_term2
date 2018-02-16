@@ -107,6 +107,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		std::cout << "you are here PMeas1" << std::endl;
 		if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
 			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
+			if (fabs(x_(0)) < 0.0001 && fabs(x_(1)) < 0.0001){
+				x_(0) = 0.0001;
+				x_(1) = 0.0001;
+			}
+		}
 
 		}
 
