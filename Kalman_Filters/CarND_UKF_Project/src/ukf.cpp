@@ -241,11 +241,18 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
 		double v1 = cos(yaw)*v;
 		double v2 = sin(yaw)*v;
-
-		// measurement model
-		Zsig(0, i) = sqrt(p_x*p_x + p_y*p_y);                        //r
-		Zsig(1, i) = atan2(p_y, p_x);                                 //phi
-		Zsig(2, i) = (p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
+		if (fabs(px) > 0.001 || fabs(py) > 0.001){
+			// measurement model
+			Zsig(0, i) = sqrt(p_x*p_x + p_y*p_y);                        //r
+			Zsig(1, i) = atan2(p_y, p_x);                                 //phi
+			Zsig(2, i) = (p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
+		}
+		else {
+			// measurement model
+			Zsig(0, i) = 0 //sqrt(p_x*p_x + p_y*p_y);                        //r
+			Zsig(1, i) = 0 //atan2(p_y, p_x);                                 //phi
+			Zsig(2, i) =  0 //(p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
+		}
 	}
 	std::cout << "Zsig updated radar:" << Zsig << std::endl;
 	UpdateCommon(meas_package, Zsig, n_z_);
