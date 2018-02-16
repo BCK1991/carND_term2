@@ -408,7 +408,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 		//angle normalization
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-			while (z_diff(i) > M_PI) z_diff(1) -= 2.*M_PI;
+			while (z_diff(1) > M_PI) z_diff(1) -= 2.*M_PI;
 			while (z_diff(1) < -M_PI) z_diff(1) += 2.*M_PI;
 
 			//angle normalization
