@@ -355,6 +355,7 @@ void UKF::PredictMeanCovariance(){
 		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
 
 		P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose();
+		std::cout << "P_pred :" << i << P_pred << std::endl;
 	}
 	std::cout << "P_pred :" << P_pred << std::endl;
 	// Update with predictions
