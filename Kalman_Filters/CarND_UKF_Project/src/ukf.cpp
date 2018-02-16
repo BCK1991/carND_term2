@@ -209,7 +209,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	// Create matrix for sigma points in measurement space
 	// Transform sigma points into measurement space
 	MatrixXd Zsig = Xsig_pred_.block(0, 0, n_z_, n_sig_);
-	
+	std::cout << "Zsig updated lidar:" << Zsig << std::endl;
 	UpdateCommon(meas_package, Zsig, n_z_);
 }
 
@@ -247,7 +247,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 		Zsig(1, i) = atan2(p_y, p_x);                                 //phi
 		Zsig(2, i) = (p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
 	}
-
+	std::cout << "Zsig updated radar:" << Zsig << std::endl;
 	UpdateCommon(meas_package, Zsig, n_z_);
 }
 
@@ -319,6 +319,7 @@ void UKF::PredictSigmaPoints(double delta_t) {
 		Xsig_pred_(3, i) = yaw_p;
 		Xsig_pred_(4, i) = yawd_p;
 	}
+	std::cout << "Xsig_pred_ :" << Xsig_pred_ << std::endl;
 	std::cout << "PredictSigmaPoints end" << std::endl;
 }
 
