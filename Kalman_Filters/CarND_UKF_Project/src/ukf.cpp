@@ -345,7 +345,7 @@ void UKF::PredictMeanCovariance(){
 	//predict state covariance matrix
 	MatrixXd P_pred = MatrixXd(n_x_, n_x_);
 	P_pred.fill(0.0);
-	
+	std::cout << "x_pred :" << x_pred << std::endl;
 	for (int i = 0; i < n_sig_; i++) {  //iterate over sigma points
 
 		// state difference
@@ -356,7 +356,7 @@ void UKF::PredictMeanCovariance(){
 
 		P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose();
 	}
-
+	std::cout << "P_pred :" << P_pred << std::endl;
 	// Update with predictions
 	x_ = x_pred;
 	P_ = P_pred;
