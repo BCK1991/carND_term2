@@ -398,6 +398,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 		Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
 	}
+	std::cout << "Tc updated :" << Tc << std::endl;
 	std::cout << "Radar Update 2" << std::endl;
 	//Kalman gain K;
 	MatrixXd K = Tc * S.inverse();
@@ -406,7 +407,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	z << meas_package.raw_measurements_;
 	//residual
 	VectorXd z_diff = z - z_pred_;
-
+	std::cout << "z_diff updated :" << z_diff << std::endl;
 	//angle normalization
 	while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
 	while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
