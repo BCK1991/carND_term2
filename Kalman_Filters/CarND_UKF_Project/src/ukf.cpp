@@ -30,7 +30,7 @@ UKF::UKF() {
   std_a_ = 1.5;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 1.5;
+  std_yawdd_ = 1.0;
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -68,7 +68,7 @@ UKF::UKF() {
   lambda_ = 3 - n_aug_;
 
   weights_ = VectorXd(n_sig_);
-
+  P_ = MatrixXd::Identity(n_x_, n_x_);
   
   R_radar_ = MatrixXd(3, 3);
   R_radar_ <<	std_radr_*std_radr_, 0, 0,
@@ -99,17 +99,13 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	std::cout << "you are here PMeas" << std::endl;
 	if (!is_initialized_) {
 
-		P_ << 0.5, 0, 0, 0, 0,
-			0, 0.5, 0, 0, 0,
-			0, 0, 0.5, 0, 0,
-			0, 0, 0, 0.5, 0,
-			0, 0, 0, 0, 0.5;
+		
 		std::cout << "you are here PMeas1" << std::endl;
 		if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
 			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
-			if (fabs(x_(0)) < 0.0001 && fabs(x_(1)) < 0.0001){
-				x_(0) = 0.0001;
-				x_(1) = 0.0001;
+			if (fabs(x_(0)) < 0.001 && fabs(x_(1)) < 0.001){
+				x_(0) = 0.001;
+				x_(1) = 0.001;
 			}
 		}
 
@@ -141,8 +137,9 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		cout << "x_" << x_ << endl;
 		return;
 	}
+
 	std::cout << "you are here PMeas3" << std::endl;
-	double dt = (meas_package.timestamp_ - time_us_) ;
+	double dt = (meas_package.timestamp_ - time_us_) / 1000000.0;
 	time_us_ = meas_package.timestamp_;
 	std::cout << "you are here PMEnd" << std::endl;
 
