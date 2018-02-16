@@ -249,9 +249,9 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 		}
 		else {
 			// measurement model
-			Zsig(0, i) = 0.0 //sqrt(p_x*p_x + p_y*p_y);                        //r
-			Zsig(1, i) = 0.0 //atan2(p_y, p_x);                                 //phi
-			Zsig(2, i) =  0.0 //(p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
+			Zsig(0, i) = 0.0; //sqrt(p_x*p_x + p_y*p_y);                        //r
+			Zsig(1, i) = 0.0; //atan2(p_y, p_x);                                 //phi
+			Zsig(2, i) = 0.0; //(p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
 		}
 	}
 	std::cout << "Zsig updated radar:" << Zsig << std::endl;
