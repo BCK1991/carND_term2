@@ -353,7 +353,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	for (int i = 0; i < n_sig_; i++) {
 		z_pred_ = z_pred_ + weights_(i) * Zsig.col(i);
 	}
-
+	std::cout << "z_pred_ updated :" << z_pred_ << std::endl;
 	//innovation covariance matrix S
 	MatrixXd S = MatrixXd(n_z_, n_z_);
 	S.fill(0.0);
@@ -367,7 +367,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 		S = S + weights_(i) * z_diff * z_diff.transpose();
 	}
-
+	std::cout << "S updated :" << S << std::endl;
 	//add measurement noise covariance matrix
 	MatrixXd R = MatrixXd(n_z_, n_z_);
 
