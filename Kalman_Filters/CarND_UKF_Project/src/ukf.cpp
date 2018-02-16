@@ -334,14 +334,18 @@ void UKF::PredictSigmaPoints(double delta_t) {
 
 void UKF::PredictMeanCovariance(){
 
-	x_.fill(0.0);
+	VectorXd x_pred = VectorXd(n_x_);
+	x_pred.fill(0.0);
+
 	//predict state mean
 	for (int i = 0; i < n_sig_; i++){
-		x_ = x_ + weights_(i)* Xsig_pred_.col(i);
+		x_pred = x_pred + weights_(i)* Xsig_pred_.col(i);
 	}
 
 	//predict state covariance matrix
-	P_.fill(0.0);
+	MatrixXd P_pred = MatrixXd(n_x_, n_x_);
+	P_pred.fill(0.0);
+	
 	for (int i = 0; i < n_sig_; i++) {  //iterate over sigma points
 
 		// state difference
@@ -350,9 +354,12 @@ void UKF::PredictMeanCovariance(){
 		while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
 		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
 
-		P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
+		P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose();
 	}
 
+	// Update with predictions
+	x_ = x_pred;
+	P_ = P_pred;
 }
 
 void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_){
