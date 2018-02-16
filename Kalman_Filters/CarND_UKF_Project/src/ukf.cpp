@@ -30,11 +30,11 @@ UKF::UKF() {
   std_a_ = 1.5;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 1.0;
+  std_yawdd_ = 0.5;
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
-  std_laspx_ = 0.35;
+  std_laspx_ = 0.15;
 
   // Laser measurement noise standard deviation position2 in m
   std_laspy_ = 0.15;
