@@ -61,7 +61,7 @@ UKF::UKF() {
 
   n_aug_ =  n_x_ + 2;
 
-  n_sig_ = 1 + 2 * n_aug_;
+  n_sig_ =  2 * n_aug_ + 1;
 
   Xsig_pred_ = MatrixXd(n_x_, n_sig_);
 
@@ -349,7 +349,7 @@ void UKF::PredictMeanCovariance(){
 	for (int i = 0; i < n_sig_; i++) {  //iterate over sigma points
 
 		// state difference
-		VectorXd x_diff = Xsig_pred_.col(i) - x_;
+		VectorXd x_diff = Xsig_pred_.col(i) - x_pred;
 		//angle normalization
 		while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
 		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
