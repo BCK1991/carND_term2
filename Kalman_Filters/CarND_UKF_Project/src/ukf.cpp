@@ -333,7 +333,7 @@ void UKF::PredictSigmaPoints(double delta_t) {
 }
 
 void UKF::PredictMeanCovariance(){
-
+	std::cout << "PredictMeanCovariance start" << std::endl;
 	VectorXd x_pred = VectorXd(n_x_);
 	x_pred.fill(0.0);
 
@@ -360,10 +360,11 @@ void UKF::PredictMeanCovariance(){
 	// Update with predictions
 	x_ = x_pred;
 	P_ = P_pred;
+	std::cout << "PredictMeanCovariance end" << std::endl;
 }
 
 void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_){
-
+	std::cout << "UpdateCommon start" << std::endl;
 	//mean predicted measurement
 	z_pred_ = VectorXd(n_z_);
 	z_pred_.fill(0.0);
