@@ -417,11 +417,14 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
 		NIS_radar_ = z.transpose() * S.inverse() * z;
+		std::cout << "NIS_radar :" << NIS_radar_ << std::endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
 		NIS_laser_ = z.transpose() * S.inverse() * z;
+		std::cout << "NIS_laser_ :" << NIS_laser_ << std::endl;
 	}
-
-	std::cout << "Radar Update 3" << std::endl;
+	std::cout << "Common Update 3" << std::endl;
+	std::cout << "x_ updated :" << x_ << std::endl;
+	std::cout << "P_ updated :" << P_ << std::endl;
 
 }
