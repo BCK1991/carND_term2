@@ -398,7 +398,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 	//create matrix for cross correlation Tc
 	MatrixXd Tc = MatrixXd(n_x_, n_z_);
-
+	Tc.fill(0.0);
 	for (int i = 0; i < n_sig_; i++) {  //2n+1 simga points
 
 		//residual
