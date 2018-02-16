@@ -118,6 +118,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 			double px = rho * cos(phi);
 			double py = rho * sin(phi);
+			double vx = rho_dot * cos(phi);
+			double vy = rho_dot * sin(phi);
 			double v = sqrt( vx*vx + vy*vy ); 
 			x_ << px, py, v, 0, 0;
 
