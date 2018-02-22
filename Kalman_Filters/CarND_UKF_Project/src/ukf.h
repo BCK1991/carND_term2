@@ -13,6 +13,10 @@ using Eigen::VectorXd;
 class UKF {
 public:
 
+	///* Output filestreams for radar and laser NIS
+	std::ofstream NISvals_radar_;
+	std::ofstream NISvals_laser_;
+
   ///* initially set to false, set to true in first call of ProcessMeasurement
   bool is_initialized_;
 
