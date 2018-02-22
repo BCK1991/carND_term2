@@ -185,7 +185,7 @@ void UKF::Prediction(double delta_t) {
 	P_aug_(5, 5) = std_a_*std_a_;
 	P_aug_(6, 6) = std_yawdd_*std_yawdd_;
 	//std::cout << "you are here" << std::endl;
-	std::cout << P_aug_ << std::endl;
+	//std::cout << P_aug_ << std::endl;
 	GenerateSigmaPoints();
 	PredictSigmaPoints(delta_t);
 	PredictMeanCovariance();
@@ -392,9 +392,11 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
 		R = R_radar_;
+		std::cout << "Radar :" << meas_package.raw_measurements_ << std::endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
 		R = R_laser_;
+		std::cout << "Lidar :" << meas_package.raw_measurements_ << std::endl;
 	}
 	S = S + R;
 
