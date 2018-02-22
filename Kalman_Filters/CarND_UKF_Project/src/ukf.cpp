@@ -437,7 +437,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	////std::cout << "Radar Update 2" << std::endl;
 	//Kalman gain K;
 	MatrixXd S_I = S.inverse();
-	MatrixXd K = Tc * S_T;
+	MatrixXd K = Tc * S_I;
 
 	VectorXd z = VectorXd(n_z_);
 	z << meas_package.raw_measurements_;
