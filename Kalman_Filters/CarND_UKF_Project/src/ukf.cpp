@@ -402,7 +402,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		double vy = rho_dot * sin(phi);
 		double v = sqrt(vx*vx + vy*vy);
 		//x_ << px, py, v, 0, 0;
-		std::cout << "Radar :" << px '\n' py << std::endl;
+		std::cout << "Radar :" << px << "\n" << py << std::endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
 		R = R_laser_;
