@@ -256,7 +256,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 			Zsig(2, i) = 0.0; //(p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
 		}
 	}
-	//std::cout << "Zsig updated radar:" << Zsig << std::endl;
+	std::cout << "Zsig updated radar:" << Zsig << std::endl;
 	UpdateCommon(meas_package, Zsig, n_z_);
 }
 
@@ -272,7 +272,7 @@ void UKF::GenerateSigmaPoints() {
 	//std::cout << x_aug_.size() << std::endl;
 	//Assign x_ as first column
 	Xsig_aug_.col(0) = x_aug_;
-	//std::cout << Xsig_aug_ << std::endl;
+	std::cout << Xsig_aug_ << std::endl;
 	//set remaining sigma points
 	for (int i = 0; i < n_x_; i++){
 		Xsig_aug_.col(i + 1) = x_aug_ + sqrt(lambda_ + n_aug_) * A.col(i);
@@ -284,7 +284,7 @@ void UKF::GenerateSigmaPoints() {
 
 void UKF::PredictSigmaPoints(double delta_t) {
 
-	//std::cout << "PredictSigmaPoints start" << std::endl;
+	std::cout << "PredictSigmaPoints start" << std::endl;
 	for (int i = 0; i< n_sig_; i++)
 	{
 		//extract values for better readability
@@ -328,12 +328,12 @@ void UKF::PredictSigmaPoints(double delta_t) {
 		Xsig_pred_(3, i) = yaw_p;
 		Xsig_pred_(4, i) = yawd_p;
 	}
-	//std::cout << "Xsig_pred_ :" << Xsig_pred_ << std::endl;
-	//std::cout << "PredictSigmaPoints end" << std::endl;
+	std::cout << "Xsig_pred_ :" << Xsig_pred_ << std::endl;
+	std::cout << "PredictSigmaPoints end" << std::endl;
 }
 
 void UKF::PredictMeanCovariance(){
-	//std::cout << "PredictMeanCovariance start" << std::endl;
+	std::cout << "PredictMeanCovariance start" << std::endl;
 	VectorXd x_pred = VectorXd(n_x_);
 	x_pred.fill(0.0);
 
@@ -345,7 +345,7 @@ void UKF::PredictMeanCovariance(){
 	//predict state covariance matrix
 	MatrixXd P_pred = MatrixXd(n_x_, n_x_);
 	P_pred.fill(0.0);
-	//std::cout << "x_pred :" << x_pred << std::endl;
+	std::cout << "x_pred :" << x_pred << std::endl;
 	for (int i = 0; i < n_sig_; i++) {  //iterate over sigma points
 
 		// state difference
@@ -361,7 +361,7 @@ void UKF::PredictMeanCovariance(){
 	// Update with predictions
 	x_ = x_pred;
 	P_ = P_pred;
-	//std::cout << "PredictMeanCovariance end" << std::endl;
+	std::cout << "PredictMeanCovariance end" << std::endl;
 }
 
 void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_){
