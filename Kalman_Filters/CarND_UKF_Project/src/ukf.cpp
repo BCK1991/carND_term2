@@ -383,8 +383,8 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		//angle normalization
 		while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
 		while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
-
-		S = S + weights_(i) * z_diff * z_diff.transpose();
+		VectorXd z_diff_T = z_diff.transpose(); 
+		S = S + weights_(i) * z_diff * z_diff_T;
 	}
 	//std::cout << "S updated :" << S << std::endl;
 	//add measurement noise covariance matrix
@@ -417,8 +417,10 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 		//residual
 		VectorXd z_diff = Zsig.col(i) - z_pred_;
+		VectorXd z_diff_T = z_diff.transpose();
 		// state difference
 		VectorXd x_diff = Xsig_pred_.col(i) - x_;
+		//VectorXd x_diff_T = x_diff.transpose();
 
 		//angle normalization
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
@@ -429,15 +431,17 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 			while (x_diff(3) > M_PI) x_diff(3) -= 2.*M_PI;
 			while (x_diff(3) < -M_PI) x_diff(3) += 2.*M_PI;
 		}
-		Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
+		Tc = Tc + weights_(i) * x_diff * z_diff_T;
 	}
 	////std::cout << "Tc updated :" << Tc << std::endl;
 	////std::cout << "Radar Update 2" << std::endl;
 	//Kalman gain K;
-	MatrixXd K = Tc * S.inverse();
+	MatrixXd S_T = S.inverse();
+	MatrixXd K = Tc * S_T;
 
 	VectorXd z = VectorXd(n_z_);
 	z << meas_package.raw_measurements_;
+	VectorXd z_T = z.transpose();
 	//residual
 	VectorXd z_diff = z - z_pred_;
 	////std::cout << "z_diff updated :" << z_diff << std::endl;
@@ -447,14 +451,15 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 	//update state mean and covariance matrix
 	x_ = x_ + K * z_diff;
-	P_ = P_ - K*S*K.transpose();
+	MatrixXd K_T = K.transpose();
+	P_ = P_ - K*S*K_T;
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
-		NIS_radar_ = z.transpose() * S.inverse() * z;
+		NIS_radar_ = z_T * S_T * z;
 		std::cout << "NIS_radar :" << NIS_radar_ << std::endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
-		NIS_laser_ = z.transpose() * S.inverse() * z;
+		NIS_laser_ = z_T * S_T * z;
 		std::cout << "NIS_laser_ :" << NIS_laser_ << std::endl;
 	}
 	//std::cout << "Common Update 3" << std::endl;
