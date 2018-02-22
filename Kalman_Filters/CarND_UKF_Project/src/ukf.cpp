@@ -117,11 +117,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
-	std::cout << "you are here PMeas" << std::endl;
+	//std::cout << "you are here PMeas" << std::endl;
 	if (!is_initialized_) {
 
 		
-		std::cout << "you are here PMeas1" << std::endl;
+		//std::cout << "you are here PMeas1" << std::endl;
 		if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
 			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
 			if (fabs(x_(0)) < 0.0001 && fabs(x_(1)) < 0.0001){
@@ -145,14 +145,14 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 			x_ << px, py, v, 0, 0;
 
 		}
-		std::cout << "you are here PMeas2" << std::endl;
+		//std::cout << "you are here PMeas2" << std::endl;
 		//Init weights
 		weights_(0) = lambda_ / (lambda_ + n_aug_);
 		for (int i = 1; i < weights_.size(); i++) {
 			weights_(i) = 0.5 / (n_aug_ + lambda_);
 		}
 
-		std::cout << "you are here PMeas2.5" << std::endl;
+		//std::cout << "you are here PMeas2.5" << std::endl;
 		time_us_ = meas_package.timestamp_;
 		//std::cout << "you are here PMeas2.6" << std::endl;
 		P_.fill(0.);
@@ -173,7 +173,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	////std::cout << "you are here PMEnd" << std::endl;
 
 	Prediction(dt);
-	std::cout << "Predicted x_" << x_ << std::endl;
+	//std::cout << "Predicted x_" << x_ << std::endl;
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
 		//cout << "Radar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateRadar(meas_package);
@@ -283,7 +283,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 			Zsig(2, i) = 0.0; //(p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
 		}
 	}
-	std::cout << "Zsig updated radar:" << Zsig << std::endl;
+	//std::cout << "Zsig updated radar:" << Zsig << std::endl;
 	UpdateCommon(meas_package, Zsig, n_z_);
 }
 
@@ -299,7 +299,7 @@ void UKF::GenerateSigmaPoints() {
 	//std::cout << x_aug_.size() << std::endl;
 	//Assign x_ as first column
 	Xsig_aug_.col(0) = x_aug_;
-	std::cout << Xsig_aug_ << std::endl;
+	//std::cout << Xsig_aug_ << std::endl;
 	//set remaining sigma points
 	for (int i = 0; i < n_aug_; i++){
 		Xsig_aug_.col(i + 1) = x_aug_ + sqrt(lambda_ + n_aug_) * A.col(i);
@@ -311,7 +311,7 @@ void UKF::GenerateSigmaPoints() {
 
 void UKF::PredictSigmaPoints(double delta_t) {
 
-	std::cout << "PredictSigmaPoints start" << std::endl;
+	//std::cout << "PredictSigmaPoints start" << std::endl;
 	for (int i = 0; i< n_sig_; i++)
 	{
 		//extract values for better readability
@@ -355,12 +355,12 @@ void UKF::PredictSigmaPoints(double delta_t) {
 		Xsig_pred_(3, i) = yaw_p;
 		Xsig_pred_(4, i) = yawd_p;
 	}
-	std::cout << "Xsig_pred_ :" << Xsig_pred_ << std::endl;
-	std::cout << "PredictSigmaPoints end" << std::endl;
+	//std::cout << "Xsig_pred_ :" << Xsig_pred_ << std::endl;
+	//std::cout << "PredictSigmaPoints end" << std::endl;
 }
 
 void UKF::PredictMeanCovariance(){
-	std::cout << "PredictMeanCovariance start" << std::endl;
+	//std::cout << "PredictMeanCovariance start" << std::endl;
 	VectorXd x_pred = VectorXd(n_x_);
 	x_pred.fill(0.0);
 
@@ -372,7 +372,7 @@ void UKF::PredictMeanCovariance(){
 	//predict state covariance matrix
 	MatrixXd P_pred = MatrixXd(n_x_, n_x_);
 	P_pred.fill(0.0);
-	std::cout << "x_pred :" << x_pred << std::endl;
+
 	for (int i = 0; i < n_sig_; i++) {  //iterate over sigma points
 
 		// state difference
@@ -388,11 +388,11 @@ void UKF::PredictMeanCovariance(){
 	// Update with predictions
 	x_ = x_pred;
 	P_ = P_pred;
-	std::cout << "PredictMeanCovariance end" << std::endl;
+
 }
 
 void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_){
-	std::cout << "UpdateCommon start" << std::endl;
+
 	//mean predicted measurement
 	z_pred_ = VectorXd(n_z_);
 	z_diff = VectorXd(n_z_);
@@ -400,7 +400,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	for (int i = 0; i < n_sig_; i++) {
 		z_pred_ = z_pred_ + weights_(i) * Zsig.col(i);
 	}
-	std::cout << "z_pred_ updated :" << z_pred_ << std::endl;
+
 	//innovation covariance matrix S
 	MatrixXd S = MatrixXd(n_z_, n_z_);
 	S.fill(0.0);
@@ -414,7 +414,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		//VectorXd z_diff_T = z_diff.transpose(); 
 		S = S + weights_(i) * z_diff * z_diff.transpose();
 	}
-	std::cout << "S updated :" << S << std::endl;
+
 	//add measurement noise covariance matrix
 	MatrixXd R = MatrixXd(n_z_, n_z_);
 
@@ -434,10 +434,9 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 		//residual
 		z_diff = Zsig.col(i) - z_pred_;
-		//VectorXd z_diff_T = z_diff.transpose();
+		
 		// state difference
 		VectorXd x_diff = Xsig_pred_.col(i) - x_;
-		//VectorXd x_diff_T = x_diff.transpose();
 
 		//angle normalization
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
@@ -450,8 +449,6 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		}
 		Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
 	}
-	////std::cout << "Tc updated :" << Tc << std::endl;
-	////std::cout << "Radar Update 2" << std::endl;
 	//Kalman gain K;
 	MatrixXd S_I = S.inverse();
 	MatrixXd K = Tc * S_I;
@@ -461,7 +458,6 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	VectorXd z_T = z.transpose();
 	//residual
 	z_diff = z - z_pred_;
-	////std::cout << "z_diff updated :" << z_diff << std::endl;
 	//angle normalization
 	while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
 	while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
@@ -481,8 +477,6 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		std::cout << "NIS_laser_ :" << NIS_laser_ << std::endl;
 		NISvals_laser_ << NIS_laser_ << endl;
 	}
-	//std::cout << "Common Update 3" << std::endl;
-	std::cout << "x_ updated :" << x_ << std::endl;
-	std::cout << "P_ updated :" << P_ << std::endl;
+
 
 }
