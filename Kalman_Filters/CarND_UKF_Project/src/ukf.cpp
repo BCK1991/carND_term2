@@ -146,7 +146,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	////std::cout << "you are here PMEnd" << std::endl;
 
 	Prediction(dt);
-	//std::cout << "Predicted x_" << x_ << std::endl;
+	std::cout << "Predicted x_" << x_ << std::endl;
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
 		//cout << "Radar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateRadar(meas_package);
@@ -402,7 +402,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		double vy = rho_dot * sin(phi);
 		double v = sqrt(vx*vx + vy*vy);
 		//x_ << px, py, v, 0, 0;
-		std::cout << "Radar :" << px << py << std::endl;
+		std::cout << "Radar :" << px '\n' py << std::endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
 		R = R_laser_;
