@@ -88,6 +88,9 @@ public:
   ///* New predicted measurement
   VectorXd z_pred_;
 
+  ///* Difference in measurement and prediction
+  VectorXd z_diff;
+
   ///*Consistency check variable for radar
   double NIS_radar_;
 

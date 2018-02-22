@@ -365,28 +365,29 @@ void UKF::PredictMeanCovariance(){
 }
 
 void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_){
-	//std::cout << "UpdateCommon start" << std::endl;
+	std::cout << "UpdateCommon start" << std::endl;
 	//mean predicted measurement
 	z_pred_ = VectorXd(n_z_);
+	z_diff = VectorXd(n_z_);
 	z_pred_.fill(0.0);
 	for (int i = 0; i < n_sig_; i++) {
 		z_pred_ = z_pred_ + weights_(i) * Zsig.col(i);
 	}
-	//std::cout << "z_pred_ updated :" << z_pred_ << std::endl;
+	std::cout << "z_pred_ updated :" << z_pred_ << std::endl;
 	//innovation covariance matrix S
 	MatrixXd S = MatrixXd(n_z_, n_z_);
 	S.fill(0.0);
 	for (int i = 0; i < n_sig_; i++) {  //2n+1 simga points
 		//residual
-		VectorXd z_diff = Zsig.col(i) - z_pred_;
+		z_diff = Zsig.col(i) - z_pred_;
 
 		//angle normalization
 		while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
 		while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
-		VectorXd z_diff_T = z_diff.transpose(); 
-		S = S + weights_(i) * z_diff * z_diff_T;
+		//VectorXd z_diff_T = z_diff.transpose(); 
+		S = S + weights_(i) * z_diff * z_diff.transpose();
 	}
-	//std::cout << "S updated :" << S << std::endl;
+	std::cout << "S updated :" << S << std::endl;
 	//add measurement noise covariance matrix
 	MatrixXd R = MatrixXd(n_z_, n_z_);
 
@@ -416,8 +417,8 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	for (int i = 0; i < n_sig_; i++) {  //2n+1 simga points
 
 		//residual
-		VectorXd z_diff = Zsig.col(i) - z_pred_;
-		VectorXd z_diff_T = z_diff.transpose();
+		z_diff = Zsig.col(i) - z_pred_;
+		//VectorXd z_diff_T = z_diff.transpose();
 		// state difference
 		VectorXd x_diff = Xsig_pred_.col(i) - x_;
 		//VectorXd x_diff_T = x_diff.transpose();
@@ -431,7 +432,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 			while (x_diff(3) > M_PI) x_diff(3) -= 2.*M_PI;
 			while (x_diff(3) < -M_PI) x_diff(3) += 2.*M_PI;
 		}
-		Tc = Tc + weights_(i) * x_diff * z_diff_T;
+		Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
 	}
 	////std::cout << "Tc updated :" << Tc << std::endl;
 	////std::cout << "Radar Update 2" << std::endl;
@@ -443,7 +444,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	z << meas_package.raw_measurements_;
 	VectorXd z_T = z.transpose();
 	//residual
-	VectorXd z_diff = z - z_pred_;
+	z_diff = z - z_pred_;
 	////std::cout << "z_diff updated :" << z_diff << std::endl;
 	//angle normalization
 	while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
