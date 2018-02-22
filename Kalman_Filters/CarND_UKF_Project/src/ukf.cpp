@@ -98,7 +98,7 @@ UKF::UKF() {
 				0, std_laspy_*std_laspy_;
 
   Xsig_aug_ = MatrixXd(n_aug_, n_sig_);
-
+  count_measurement = 0;
 }
 
 UKF::~UKF() {
@@ -169,7 +169,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	
 	double dt = (meas_package.timestamp_ - time_us_) / 1000000.0;
 	time_us_ = meas_package.timestamp_;
-
+	cout << count_measurement << endl;
 	Prediction(dt);
 	
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
@@ -180,7 +180,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		//cout << "Lidar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateLidar(meas_package);
 	}
-	
+	count_measurement++;
 
 }
 
