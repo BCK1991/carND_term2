@@ -14,19 +14,19 @@ using std::vector;
 UKF::UKF() {
   
 	// Open NIS data files
-	NISvals_radar_.open("../NIS_Val/NIS_radar.txt", ios::out);
-	NISvals_laser_.open("../NIS_Val/NIS_lidar.txt", ios::out);
+	NISval_radar_.open("../NIS_Val/NIS_radar.txt", ios::out);
+	NISval_lidar_.open("../NIS_Val/NIS_lidar.txt", ios::out);
 
 	// Check for errors opening the files
-	if (!NISvals_radar_.is_open())
+	if (!NISval_radar_.is_open())
 	{
-		cout << "Error opening NISvals_radar.txt" << endl;
+		cout << "Error opening NIS_radar.txt" << endl;
 		exit(1);
 	}
 
-	if (!NISvals_laser_.is_open())
+	if (!NISval_lidar_.is_open())
 	{
-		cout << "Error opening NISvals_laser.txt" << endl;
+		cout << "Error opening NIS_lidar.txt" << endl;
 		exit(1);
 	}
 
@@ -102,8 +102,8 @@ UKF::UKF() {
 }
 
 UKF::~UKF() {
-	NISvals_radar_.close();
-	NISvals_laser_.close();
+	NISval_radar_.close();
+	NISval_lidar_.close();
 }
 
 /**
@@ -117,11 +117,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
-	//std::cout << "you are here PMeas" << std::endl;
+	
 	if (!is_initialized_) {
 
 		
-		//std::cout << "you are here PMeas1" << std::endl;
+		
 		if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
 			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
 			if (fabs(x_(0)) < 0.0001 && fabs(x_(1)) < 0.0001){
@@ -145,16 +145,16 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 			x_ << px, py, v, 0, 0;
 
 		}
-		//std::cout << "you are here PMeas2" << std::endl;
+		
 		//Init weights
 		weights_(0) = lambda_ / (lambda_ + n_aug_);
 		for (int i = 1; i < weights_.size(); i++) {
 			weights_(i) = 0.5 / (n_aug_ + lambda_);
 		}
 
-		//std::cout << "you are here PMeas2.5" << std::endl;
+		
 		time_us_ = meas_package.timestamp_;
-		//std::cout << "you are here PMeas2.6" << std::endl;
+		
 		P_.fill(0.);
 		P_(0, 0) = 1.;
 		P_(1, 1) = 1.;
@@ -162,18 +162,16 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		P_(3, 3) = 1.;
 		P_(4, 4) = 1.;
 		is_initialized_ = true;
-		cout << "Init" << endl;
-		cout << "x_truth -> " << x_ << endl;
+		
 		return;
 	}
 
-	////std::cout << "you are here PMeas3" << std::endl;
+	
 	double dt = (meas_package.timestamp_ - time_us_) / 1000000.0;
 	time_us_ = meas_package.timestamp_;
-	////std::cout << "you are here PMEnd" << std::endl;
 
 	Prediction(dt);
-	//std::cout << "Predicted x_" << x_ << std::endl;
+	
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
 		//cout << "Radar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateRadar(meas_package);
@@ -182,7 +180,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		//cout << "Lidar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateLidar(meas_package);
 	}
-	//std::cout << "Finish" << std::endl;
+	
 
 }
 
@@ -198,7 +196,6 @@ void UKF::Prediction(double delta_t) {
   Complete this function! Estimate the object's location. Modify the state
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
-	//std::cout << "you are here prediction" << std::endl;
 	//create augmanted state matrix
 	x_aug_ = VectorXd(n_aug_);
 	// mean of the process noises are zero 
@@ -211,13 +208,11 @@ void UKF::Prediction(double delta_t) {
 	P_aug_.topLeftCorner(n_x_, n_x_) = P_;
 	P_aug_(5, 5) = std_a_*std_a_;
 	P_aug_(6, 6) = std_yawdd_*std_yawdd_;
-	//std::cout << "you are here" << std::endl;
-	//std::cout << P_aug_ << std::endl;
+
 	GenerateSigmaPoints();
 	PredictSigmaPoints(delta_t);
 	PredictMeanCovariance();
 	
-
 }
 
 /**
@@ -238,7 +233,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	// Create matrix for sigma points in measurement space
 	// Transform sigma points into measurement space
 	MatrixXd Zsig = Xsig_pred_.block(0, 0, n_z_, n_sig_);
-	//std::cout << "Zsig updated lidar:" << Zsig << std::endl;
+
 	UpdateCommon(meas_package, Zsig, n_z_);
 }
 
@@ -256,7 +251,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   You'll also need to calculate the radar NIS.
   */
 	int n_z_ = 3;
-	//std::cout << "Radar Update 1" << std::endl;
+	
 	//create matrix for sigma points in measurement space
 	MatrixXd Zsig = MatrixXd(n_z_, n_sig_);
 	//transform sigma points into measurement space
@@ -283,7 +278,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 			Zsig(2, i) = 0.0; //(p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
 		}
 	}
-	//std::cout << "Zsig updated radar:" << Zsig << std::endl;
+	
 	UpdateCommon(meas_package, Zsig, n_z_);
 }
 
@@ -294,24 +289,22 @@ void UKF::GenerateSigmaPoints() {
 
 	//Calculate square root of P
 	MatrixXd A = P_aug_.llt().matrixL();
-	////std::cout << "GenSigPts 1" << std::endl;
-	//std::cout << Xsig_aug_.size() << std::endl;
-	//std::cout << x_aug_.size() << std::endl;
+
 	//Assign x_ as first column
 	Xsig_aug_.col(0) = x_aug_;
-	//std::cout << Xsig_aug_ << std::endl;
+
 	//set remaining sigma points
 	for (int i = 0; i < n_aug_; i++){
 		Xsig_aug_.col(i + 1) = x_aug_ + sqrt(lambda_ + n_aug_) * A.col(i);
-		//std::cout << i << std::endl;
+
 		Xsig_aug_.col(i + 1 + n_aug_) = x_aug_ - sqrt(lambda_ + n_aug_) * A.col(i);
 	}
-	////std::cout << "GenSigPts end" << std::endl;
+
 }
 
 void UKF::PredictSigmaPoints(double delta_t) {
 
-	//std::cout << "PredictSigmaPoints start" << std::endl;
+
 	for (int i = 0; i< n_sig_; i++)
 	{
 		//extract values for better readability
@@ -355,12 +348,11 @@ void UKF::PredictSigmaPoints(double delta_t) {
 		Xsig_pred_(3, i) = yaw_p;
 		Xsig_pred_(4, i) = yawd_p;
 	}
-	//std::cout << "Xsig_pred_ :" << Xsig_pred_ << std::endl;
-	//std::cout << "PredictSigmaPoints end" << std::endl;
+
 }
 
 void UKF::PredictMeanCovariance(){
-	//std::cout << "PredictMeanCovariance start" << std::endl;
+
 	VectorXd x_pred = VectorXd(n_x_);
 	x_pred.fill(0.0);
 
@@ -382,9 +374,9 @@ void UKF::PredictMeanCovariance(){
 		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
 
 		P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose();
-		//std::cout << "P_pred :" << i << P_pred << std::endl;
+
 	}
-	//std::cout << "P_pred :" << P_pred << std::endl;
+
 	// Update with predictions
 	x_ = x_pred;
 	P_ = P_pred;
@@ -469,13 +461,13 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
 		NIS_radar_ = z_diff.transpose() * S.inverse() * z_diff;
-		std::cout << "NIS_radar :" << NIS_radar_ << std::endl;
-		NISvals_radar_ << NIS_radar_ << endl;
+		
+		NISval_radar_ << NIS_radar_ << endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
 		NIS_laser_ = z_diff.transpose() * S.inverse() * z_diff;
-		std::cout << "NIS_laser_ :" << NIS_laser_ << std::endl;
-		NISvals_laser_ << NIS_laser_ << endl;
+		
+		NISval_lidar_ << NIS_laser_ << endl;
 	}
 
 
