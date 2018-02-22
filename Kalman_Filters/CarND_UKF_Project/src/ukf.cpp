@@ -146,7 +146,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	//std::cout << "you are here PMEnd" << std::endl;
 
 	Prediction(dt);
-	std::cout << "Predicted x_" << x_pred << std::endl;
+	std::cout << "Predicted x_" << x_ << std::endl;
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
 		//cout << "Radar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateRadar(meas_package);
