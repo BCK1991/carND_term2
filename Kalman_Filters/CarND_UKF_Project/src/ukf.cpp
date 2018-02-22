@@ -472,12 +472,12 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	P_ = P_ - K*S*K_T;
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
-		NIS_radar_ = z.transpose() * S_I * z;
+		NIS_radar_ = z_diff.transpose() * S.inverse() * z_diff;
 		std::cout << "NIS_radar :" << NIS_radar_ << std::endl;
 		NISvals_radar_ << NIS_radar_ << endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
-		NIS_laser_ = z.transpose() * S_I * z;
+		NIS_laser_ = z_diff.transpose() * S.inverse() * z_diff;
 		std::cout << "NIS_laser_ :" << NIS_laser_ << std::endl;
 		NISvals_laser_ << NIS_laser_ << endl;
 	}
