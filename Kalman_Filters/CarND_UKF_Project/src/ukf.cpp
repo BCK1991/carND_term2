@@ -436,7 +436,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	////std::cout << "Tc updated :" << Tc << std::endl;
 	////std::cout << "Radar Update 2" << std::endl;
 	//Kalman gain K;
-	MatrixXd S_T = S.inverse();
+	MatrixXd S_I = S.inverse();
 	MatrixXd K = Tc * S_T;
 
 	VectorXd z = VectorXd(n_z_);
@@ -455,11 +455,11 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	P_ = P_ - K*S*K_T;
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
-		NIS_radar_ = z_T * S_T * z;
+		NIS_radar_ = z.transpose() * S_I * z;
 		std::cout << "NIS_radar :" << NIS_radar_ << std::endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
-		NIS_laser_ = z_T * S_T * z;
+		NIS_laser_ = z.transpose() * S_I * z;
 		std::cout << "NIS_laser_ :" << NIS_laser_ << std::endl;
 	}
 	//std::cout << "Common Update 3" << std::endl;
