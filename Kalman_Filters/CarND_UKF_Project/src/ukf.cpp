@@ -392,7 +392,17 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
 		R = R_radar_;
-		std::cout << "Radar :" << meas_package.raw_measurements_ << std::endl;
+		double rho = meas_package.raw_measurements_[0];
+		double phi = meas_package.raw_measurements_[1];
+		double rho_dot = meas_package.raw_measurements_[2];
+
+		double px = rho * cos(phi);
+		double py = rho * sin(phi);
+		double vx = rho_dot * cos(phi);
+		double vy = rho_dot * sin(phi);
+		double v = sqrt(vx*vx + vy*vy);
+		//x_ << px, py, v, 0, 0;
+		std::cout << "Radar :" << px << py << std::endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
 		R = R_laser_;
