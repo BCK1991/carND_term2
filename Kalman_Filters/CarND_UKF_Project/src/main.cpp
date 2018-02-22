@@ -104,12 +104,12 @@ int main()
     	  gt_values(2) = vx_gt;
     	  gt_values(3) = vy_gt;
     	  ground_truth.push_back(gt_values);
-		  std::cout << "you are here main 1" << std::endl;
+		  
           //Call ProcessMeasurment(meas_package) for Kalman filter
     	  ukf.ProcessMeasurement(meas_package);    	  
 
     	  //Push the current estimated x,y positon from the Kalman filter's state vector
-		  std::cout << "you are here main 2" << std::endl;
+		 
     	  VectorXd estimate(4);
 
     	  double p_x = ukf.x_(0);
@@ -126,9 +126,9 @@ int main()
     	  estimate(3) = v2;
     	  
     	  estimations.push_back(estimate);
-		  std::cout << "you are here main 3" << std::endl;
+		  
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
-		  std::cout << "you are here main 4" << std::endl;
+		  
           json msgJson;
           msgJson["estimate_x"] = p_x;
           msgJson["estimate_y"] = p_y;
