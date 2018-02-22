@@ -27,10 +27,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 1.5;
+  std_a_ = 3.0;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 0.5;
+  std_yawdd_ = 1.0;
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -68,7 +68,7 @@ UKF::UKF() {
   lambda_ = 3 - n_aug_;
 
   weights_ = VectorXd(n_sig_);
-  P_ = MatrixXd::Identity(n_x_, n_x_);
+  //P_ = MatrixXd::Identity(n_x_, n_x_);
   
   R_radar_ = MatrixXd(3, 3);
   R_radar_ <<	std_radr_*std_radr_, 0, 0,
@@ -103,9 +103,9 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		std::cout << "you are here PMeas1" << std::endl;
 		if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
 			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
-			if (fabs(x_(0)) < 0.001 && fabs(x_(1)) < 0.001){
-				x_(0) = 0.001;
-				x_(1) = 0.001;
+			if (fabs(x_(0)) < 0.0001 && fabs(x_(1)) < 0.0001){
+				x_(0) = 0.0001;
+				x_(1) = 0.0001;
 			}
 		}
 
@@ -134,6 +134,12 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		std::cout << "you are here PMeas2.5" << std::endl;
 		time_us_ = meas_package.timestamp_;
 		//std::cout << "you are here PMeas2.6" << std::endl;
+		P_.fill(0.);
+		P_(0, 0) = 1.;
+		P_(1, 1) = 1.;
+		P_(2, 2) = 1.;
+		P_(3, 3) = 1.;
+		P_(4, 4) = 1.;
 		is_initialized_ = true;
 		cout << "Init" << endl;
 		cout << "x_truth -> " << x_ << endl;
@@ -274,10 +280,10 @@ void UKF::GenerateSigmaPoints() {
 	Xsig_aug_.col(0) = x_aug_;
 	std::cout << Xsig_aug_ << std::endl;
 	//set remaining sigma points
-	for (int i = 0; i < n_x_; i++){
+	for (int i = 0; i < n_aug_; i++){
 		Xsig_aug_.col(i + 1) = x_aug_ + sqrt(lambda_ + n_aug_) * A.col(i);
 		//std::cout << i << std::endl;
-		Xsig_aug_.col(i + 1 + n_x_) = x_aug_ - sqrt(lambda_ + n_aug_) * A.col(i);
+		Xsig_aug_.col(i + 1 + n_aug_) = x_aug_ - sqrt(lambda_ + n_aug_) * A.col(i);
 	}
 	////std::cout << "GenSigPts end" << std::endl;
 }
