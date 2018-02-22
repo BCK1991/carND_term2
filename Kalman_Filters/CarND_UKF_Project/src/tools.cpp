@@ -34,5 +34,14 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	// Calculate the mean
 	rmse = rmse / estimations.size();
 	rmse = rmse.array().sqrt();
+	if (rmse(0) > 0.09)
+		cout << "px = " << rmse(0) << " > 0.09" << endl;
+	if (rmse(1) > 0.10)
+		cout << "py = " << rmse(1) << " > 0.10" << endl;
+	if (rmse(2) > 0.40)
+		cout << "vx = " << rmse(2) << " > 0.40" << endl;
+	if (rmse(3) > 0.30)
+		cout << "vy = " << rmse(3) << " > 0.30" << endl;
+
 	return rmse;
 }
