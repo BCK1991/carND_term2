@@ -33,6 +33,7 @@ int main()
   // Create a Kalman Filter instance
   UKF ukf;
 
+  int count_measurement = 0; 
   // used to compute the RMSE later
   Tools tools;
   vector<VectorXd> estimations;
@@ -126,9 +127,9 @@ int main()
     	  estimate(3) = v2;
     	  
     	  estimations.push_back(estimate);
-		  
+		  cout << count_measurement << endl; 
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
-		  
+		  count_measurement++; 
           json msgJson;
           msgJson["estimate_x"] = p_x;
           msgJson["estimate_y"] = p_y;
