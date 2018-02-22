@@ -13,6 +13,24 @@ using std::vector;
  */
 UKF::UKF() {
   
+	// Open NIS data files
+	NISvals_radar_.open("../NIS_Val/NIS_radar.txt", ios::out);
+	NISvals_laser_.open("../NIS_Val/NIS_lidar.txt", ios::out);
+
+	// Check for errors opening the files
+	if (!NISvals_radar_.is_open())
+	{
+		cout << "Error opening NISvals_radar.txt" << endl;
+		exit(1);
+	}
+
+	if (!NISvals_laser_.is_open())
+	{
+		cout << "Error opening NISvals_laser.txt" << endl;
+		exit(1);
+	}
+
+
 	is_initialized_ = false;
 	// if this is false, laser measurements will be ignored (except during init)
   use_laser_ = true;
@@ -83,7 +101,10 @@ UKF::UKF() {
 
 }
 
-UKF::~UKF() {}
+UKF::~UKF() {
+	NISvals_radar_.close();
+	NISvals_laser_.close();
+}
 
 /**
  * @param {MeasurementPackage} meas_package The latest measurement data of
@@ -399,21 +420,10 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
 		R = R_radar_;
-		double rho = meas_package.raw_measurements_[0];
-		double phi = meas_package.raw_measurements_[1];
-		double rho_dot = meas_package.raw_measurements_[2];
-
-		double px = rho * cos(phi);
-		double py = rho * sin(phi);
-		double vx = rho_dot * cos(phi);
-		double vy = rho_dot * sin(phi);
-		double v = sqrt(vx*vx + vy*vy);
-		//x_ << px, py, v, 0, 0;
-		std::cout << "Radar :" << px << "\n" << py << std::endl;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
 		R = R_laser_;
-		std::cout << "Lidar :" << meas_package.raw_measurements_ << std::endl;
+
 	}
 	S = S + R;
 
@@ -464,10 +474,12 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR){ // Radar
 		NIS_radar_ = z.transpose() * S_I * z;
 		std::cout << "NIS_radar :" << NIS_radar_ << std::endl;
+		NISvals_radar_ << NIS_radar_ << endl;;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER){ // Lidar
 		NIS_laser_ = z.transpose() * S_I * z;
 		std::cout << "NIS_laser_ :" << NIS_laser_ << std::endl;
+		NISvals_laser_ << NIS_laser_ << NISvals_laser_;;
 	}
 	//std::cout << "Common Update 3" << std::endl;
 	std::cout << "x_ updated :" << x_ << std::endl;
