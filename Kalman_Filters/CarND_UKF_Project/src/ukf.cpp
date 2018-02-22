@@ -136,17 +136,17 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		std::cout << "you are here PMeas2.6" << std::endl;
 		is_initialized_ = true;
 		cout << "Init" << endl;
-		cout << "x_" << x_ << endl;
+		cout << "x_truth -> " << x_ << endl;
 		return;
 	}
 
-	std::cout << "you are here PMeas3" << std::endl;
+	//std::cout << "you are here PMeas3" << std::endl;
 	double dt = (meas_package.timestamp_ - time_us_) / 1000000.0;
 	time_us_ = meas_package.timestamp_;
-	std::cout << "you are here PMEnd" << std::endl;
+	//std::cout << "you are here PMEnd" << std::endl;
 
 	Prediction(dt);
-	std::cout << "UpdateEnter" << std::endl;
+	std::cout << "Predicted x_" << x_pred << std::endl;
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_) {
 		//cout << "Radar " << measurement_pack.raw_measurements_[0] << " " << measurement_pack.raw_measurements_[1] << endl;
 		UpdateRadar(meas_package);
@@ -267,19 +267,19 @@ void UKF::GenerateSigmaPoints() {
 
 	//Calculate square root of P
 	MatrixXd A = P_aug_.llt().matrixL();
-	std::cout << "GenSigPts 1" << std::endl;
+	//std::cout << "GenSigPts 1" << std::endl;
 	//std::cout << Xsig_aug_.size() << std::endl;
 	//std::cout << x_aug_.size() << std::endl;
 	//Assign x_ as first column
 	Xsig_aug_.col(0) = x_aug_;
-	std::cout << Xsig_aug_ << std::endl;
+	//std::cout << Xsig_aug_ << std::endl;
 	//set remaining sigma points
 	for (int i = 0; i < n_x_; i++){
 		Xsig_aug_.col(i + 1) = x_aug_ + sqrt(lambda_ + n_aug_) * A.col(i);
 		//std::cout << i << std::endl;
 		Xsig_aug_.col(i + 1 + n_x_) = x_aug_ - sqrt(lambda_ + n_aug_) * A.col(i);
 	}
-	std::cout << "GenSigPts end" << std::endl;
+	//std::cout << "GenSigPts end" << std::endl;
 }
 
 void UKF::PredictSigmaPoints(double delta_t) {
@@ -355,17 +355,17 @@ void UKF::PredictMeanCovariance(){
 		while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
 
 		P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose();
-		std::cout << "P_pred :" << i << P_pred << std::endl;
+		//std::cout << "P_pred :" << i << P_pred << std::endl;
 	}
-	std::cout << "P_pred :" << P_pred << std::endl;
+	//std::cout << "P_pred :" << P_pred << std::endl;
 	// Update with predictions
 	x_ = x_pred;
 	P_ = P_pred;
-	std::cout << "PredictMeanCovariance end" << std::endl;
+	//std::cout << "PredictMeanCovariance end" << std::endl;
 }
 
 void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_){
-	std::cout << "UpdateCommon start" << std::endl;
+	//std::cout << "UpdateCommon start" << std::endl;
 	//mean predicted measurement
 	z_pred_ = VectorXd(n_z_);
 	z_pred_.fill(0.0);
@@ -419,8 +419,8 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		}
 		Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
 	}
-	std::cout << "Tc updated :" << Tc << std::endl;
-	std::cout << "Radar Update 2" << std::endl;
+	//std::cout << "Tc updated :" << Tc << std::endl;
+	//std::cout << "Radar Update 2" << std::endl;
 	//Kalman gain K;
 	MatrixXd K = Tc * S.inverse();
 
@@ -428,7 +428,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 	z << meas_package.raw_measurements_;
 	//residual
 	VectorXd z_diff = z - z_pred_;
-	std::cout << "z_diff updated :" << z_diff << std::endl;
+	//std::cout << "z_diff updated :" << z_diff << std::endl;
 	//angle normalization
 	while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
 	while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
@@ -445,7 +445,7 @@ void UKF::UpdateCommon(MeasurementPackage meas_package, MatrixXd Zsig, int n_z_)
 		NIS_laser_ = z.transpose() * S.inverse() * z;
 		std::cout << "NIS_laser_ :" << NIS_laser_ << std::endl;
 	}
-	std::cout << "Common Update 3" << std::endl;
+	//std::cout << "Common Update 3" << std::endl;
 	std::cout << "x_ updated :" << x_ << std::endl;
 	std::cout << "P_ updated :" << P_ << std::endl;
 
