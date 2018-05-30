@@ -30,6 +30,7 @@ int main()
 	uWS::Hub h;
 
 	//Set up parameters here
+	
 	double delta_t = 0.1; // Time elapsed between measurements [sec]
 	double sensor_range = 50; // Sensor range [m]
 
@@ -127,9 +128,8 @@ int main()
 						}
 						weight_sum += particles[i].weight;
 					}
-					cout << "sum w " << weight_sum << endl;
-					cout << "highest w " << highest_weight << endl;
-					cout << "average w " << weight_sum / num_particles << endl;
+					cout << "Weighted Sum : " << weight_sum << endl;
+					cout << "Highest Weight : " << highest_weight << endl;
 
 					json msgJson;
 					msgJson["best_particle_x"] = best_particle.x;

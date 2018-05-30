@@ -19,46 +19,35 @@
 
 using namespace std;
 
-default_random_engine gen;
+default_random_engine DRE; // A random number engine class that generates pseudo-random numbers.
 
+/* This function takes the input GPS position and initial heading estimate and an array of uncertainities for this measurement*/
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
-	// TODO: Set the number of particles. Initialize all particles to first position (based on estimates of 
-	//   x, y, theta and their uncertainties from GPS) and all weights to 1. 
-	// Add random Gaussian noise to each particle.
-	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 
 	ParticleFilter::num_particles = NUM_PARTICLES;
 
-	//    default_random_engine gen;
+	//Add random Gaussian noise to each particle
 	normal_distribution<double> dist_x(x, std[0]);
 	normal_distribution<double> dist_y(y, std[1]);
 	normal_distribution<double> dist_theta(theta, std[2]);
 
-	for (int i = 0; i < num_particles; i++)
-	{
-		Particle sample;
-		sample.x = dist_x(gen);
-		sample.y = dist_y(gen);
-		sample.theta = dist_theta(gen);
-		sample.weight = 1.0;
+	//initialize all particles with random numbers 
+	for (int i = 0; i < num_particles; i++){
+		Particle _Sample;
+		_Sample.x = dist_x(DRE);
+		_Sample.y = dist_y(DRE);
+		_Sample.theta = dist_theta(DRE);
+		_Sample.weight = 1.0;
 
-		particles.push_back(sample);
+		particles.push_back(_Sample);
 		ParticleFilter::weights.push_back(1.0);
 	}
 
 	ParticleFilter::is_initialized = true;
 
-	cout << "INIT Done!" << endl;
-
 }
-
+/* This function takes the input amount of time between the time steps, the velocity and the yaw rate measurement uncertainity, and the current velocity and yaw rate measurements */
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
-	// TODO: Add measurements to each particle and add random Gaussian noise.
-	// NOTE: When adding noise you may find std::normal_distribution and std::default_random_engine useful.
-	//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
-	//  http://www.cplusplus.com/reference/random/default_random_engine/
-
-	//    default_random_engine gen;
 
 	for (int i = 0; i < num_particles; i++)
 	{
@@ -66,26 +55,28 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		normal_distribution<double> dist_y(particles[i].y, std_pos[1]);
 		normal_distribution<double> dist_theta(particles[i].theta, std_pos[2]);
 
-		double theta_gauss = dist_theta(gen);
-		double x_gauss = dist_x(gen);
-		double y_gauss = dist_y(gen);
-
+		double theta_noisy = dist_theta(DRE);
+		double x_noisy = dist_x(DRE);
+		double y_noisy = dist_y(DRE);
+		
+		//Add measurements to each particle and add random Gaussian noise.
 		if (yaw_rate != 0)
 		{
-			particles[i].x = x_gauss + ((velocity / yaw_rate)*
-				(sin(theta_gauss + (yaw_rate * delta_t)) - sin(theta_gauss)));
+			particles[i].x = x_noisy + ((velocity / yaw_rate)*
+				(sin(theta_noisy + (yaw_rate * delta_t)) - sin(theta_noisy)));
 
-			particles[i].y = y_gauss + ((velocity / yaw_rate)*
-				(cos(theta_gauss) - cos(theta_gauss + (yaw_rate*delta_t))));
+			particles[i].y = y_noisy + ((velocity / yaw_rate)*
+				(cos(theta_noisy) - cos(theta_noisy + (yaw_rate*delta_t))));
 		}
 		else
 		{
-			particles[i].x = x_gauss + (velocity * cos(theta_gauss) * delta_t);
-			particles[i].y = y_gauss + (velocity * sin(theta_gauss) * delta_t);
+			particles[i].x = x_noisy + (velocity * cos(theta_noisy) * delta_t);
+			particles[i].y = y_noisy + (velocity * sin(theta_noisy) * delta_t);
 
 		}
-		particles[i].theta = theta_gauss + yaw_rate * delta_t;
+		particles[i].theta = theta_noisy + yaw_rate * delta_t;
 
+		//Reset
 		dist_x.reset();
 		dist_y.reset();
 		dist_theta.reset();
@@ -111,7 +102,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	//   according to the MAP'S coordinate system. You will need to transform between the two systems.
 	//   Keep in mind that this transformation requires both rotation AND translation (but no scaling).
 	//   The following is a good resource for the theory:
-	//   https://www.willamette.edu/~gorr/classes/GeneralGraphics/Transforms/transforms2d.htm
+	//   https://www.willamette.edu/~gorr/classes/DREeralGraphics/Transforms/transforms2d.htm
 	//   and the following is a good resource for the actual equation to implement (look at equation 
 	//   3.33
 	//   http://planning.cs.uiuc.edu/node99.html
@@ -123,7 +114,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	{
 		particles[i].nn_associations = observations;
 		vector<LandmarkObs> temp;
-		// Homogenuous Transformation of observations from vehicle to map coordinates.
+		// HomoDREuous Transformation of observations from vehicle to map coordinates.
 		// *  particles::associations vector consists of:
 		// 1. Observations within sensor range for each particle
 		// 2. Observations transformed to map coords
@@ -202,15 +193,15 @@ void ParticleFilter::resample() {
 	// NOTE: You may find std::discrete_distribution helpful here.
 	//   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
 
-	//    default_random_engine gen;
+	//    default_random_engine DRE;
 	//    random_device rd;
-	//    mt19937 gen(rd());
+	//    mt19937 DRE(rd());
 
 	discrete_distribution<> d(ParticleFilter::weights.begin(), ParticleFilter::weights.end());
 	vector<Particle> resampled_particles;
 	for (int i = 0; i < ParticleFilter::num_particles; i++)
 	{
-		resampled_particles.push_back(particles[d(gen)]);
+		resampled_particles.push_back(particles[d(DRE)]);
 	}
 	particles = resampled_particles;
 	d.reset();
@@ -220,13 +211,13 @@ void ParticleFilter::resample() {
 	/*
 	double w_max = *max_element(ParticleFilter::weights.begin(), ParticleFilter::weights.end());
 	vector<Particle> resampled_particles;
-	//    default_random_engine gen;
+	//    default_random_engine DRE;
 	std::uniform_real_distribution<double> w_dist(0, 2*w_max);
 	double B;
 	int index = rand() % ParticleFilter::num_particles;
 	for (int i=0; i < ParticleFilter::num_particles; i++)
 	{
-	B = fmod(B+w_dist(gen), 2*w_max);
+	B = fmod(B+w_dist(DRE), 2*w_max);
 	while (B > ParticleFilter::weights[index])
 	{
 	B -= ParticleFilter::weights[index];
