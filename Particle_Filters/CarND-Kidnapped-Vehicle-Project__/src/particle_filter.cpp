@@ -72,16 +72,12 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		{
 			particles[i].x = x_noisy + (velocity * cos(theta_noisy) * delta_t);
 			particles[i].y = y_noisy + (velocity * sin(theta_noisy) * delta_t);
-
 		}
 		particles[i].theta = theta_noisy + yaw_rate * delta_t;
-
 		//Reset
 		dist_x.reset();
 		dist_y.reset();
 		dist_theta.reset();
-
-
 	}
 }
 
@@ -91,33 +87,22 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	// NOTE: this method will NOT be called by the grading code. But you will probably find it useful to 
 	//   implement this method and use it as a helper during the updateWeights phase.
 
+	//Replaced internally in the updateWeights function.
 	return;
 }
 
+/* This function takes the input range of the sensor, the landmark measurement uncertainities, a vector of landmark measurements as input */
 void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	const std::vector<LandmarkObs> &observations, const Map &map_landmarks) {
-	// TODO: Update the weights of each particle using a mult-variate Gaussian distribution. You can read
-	//   more about this distribution here: https://en.wikipedia.org/wiki/Multivariate_normal_distribution
-	// NOTE: The observations are given in the VEHICLE'S coordinate system. Your particles are located
-	//   according to the MAP'S coordinate system. You will need to transform between the two systems.
-	//   Keep in mind that this transformation requires both rotation AND translation (but no scaling).
-	//   The following is a good resource for the theory:
-	//   https://www.willamette.edu/~gorr/classes/DREeralGraphics/Transforms/transforms2d.htm
-	//   and the following is a good resource for the actual equation to implement (look at equation 
-	//   3.33
-	//   http://planning.cs.uiuc.edu/node99.html
 
 	double delta_x, delta_y, diff;
-	double gauss_norm = 1.0 / (2 * M_PI * std_landmark[0] * std_landmark[1]);
+	
 
 	for (int i = 0; i < num_particles; i++)
 	{
 		particles[i].nn_associations = observations;
 		vector<LandmarkObs> temp;
-		// HomoDREuous Transformation of observations from vehicle to map coordinates.
-		// *  particles::associations vector consists of:
-		// 1. Observations within sensor range for each particle
-		// 2. Observations transformed to map coords
+
 		for (int j = 0; j < particles[i].nn_associations.size(); j++)
 		{
 			double range = sqrt(pow(observations[j].x, 2) + pow(observations[j].y, 2));
@@ -132,13 +117,14 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		}
 		particles[i].nn_associations = temp;
 
-		// particles::associations --> array of observations within sensor range in map coords.
-		// Below: Set Nearest Neighbor Landmark ID to each Particle predicted observation.
+		// particles::associations function is implemented here
 		for (int j = 0; j < particles[i].nn_associations.size(); j++)
 		{
+			//assign a big number to min_diff as starting value
 			double min_diff = 10000;
 			for (int k = 0; k < map_landmarks.landmark_list.size(); k++)
 			{
+				
 				delta_x = particles[i].nn_associations[j].x - map_landmarks.landmark_list[k].x_f;
 				delta_y = particles[i].nn_associations[j].y - map_landmarks.landmark_list[k].y_f;
 				diff = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
@@ -150,40 +136,22 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				}
 			}
 		}
+
+		double normalization = 0.5 / (M_PI * std_landmark[0] * std_landmark[1]);
 		particles[i].weight = 1.0;
+		//multi-variant gaussian probability density function.
 		for (int j = 0; j < particles[i].nn_associations.size(); j++)
 		{
 			Map::single_landmark_s landmark = map_landmarks.landmark_list[particles[i].nn_associations[j].id - 1];
 			double diff_x = particles[i].nn_associations[j].x - landmark.x_f;
-			double X = pow(diff_x, 2) / (2 * pow(std_landmark[0], 2));
-
+			double calculated_X = pow(diff_x, 2) / (2 * pow(std_landmark[0], 2));
 			double diff_y = particles[i].nn_associations[j].y - landmark.y_f;
-			double Y = pow(diff_y, 2) / (2 * pow(std_landmark[1], 2));
+			double calculated_Y = pow(diff_y, 2) / (2 * pow(std_landmark[1], 2));
+			double weight_temp = exp(-(calculated_X + calculated_Y)) * normalization;
 
-			double weight_temp = exp(-(X + Y)) * gauss_norm;
 			particles[i].weight *= weight_temp;
 		}
-		//        for (int j=0; j < particles[i].nn_associations.size(); j++)
-		//        {
-		//            for (int k=0; k < map_landmarks.landmark_list.size(); k++)
-		//            {
-		//                if (particles[i].nn_associations[j].id == map_landmarks.landmark_list[k].id_i)
-		//                {
-		//                        // Multivariate Gaussian Distribution
-		// // x = map_landmarks.landmark_list[k].x    // mu_x = particles[i].associations[j].x
-		// // y = map_landmarks.landmark_list[k].y    // mu_y = particles[i].associations[j].y
-		// // sigma_x = std_landmark[0]               // sigma_y = std_landmark[1]
-		//                    double diff_x = particles[i].nn_associations[j].x -map_landmarks.landmark_list[k].x_f;
-		//                    double X = pow(diff_x,2) / (2 * pow(std_landmark[0],2));
-		//
-		//                    double diff_y = particles[i].nn_associations[j].y -map_landmarks.landmark_list[k].y_f;
-		//                    double Y = pow(diff_y,2) / (2 * pow(std_landmark[1],2));
-		//
-		//                    double weight_temp = exp(-(X+Y)) * gauss_norm;
-		//                    particles[i].weight *= weight_temp;
-		//                }
-		//            }
-		//        }
+
 		ParticleFilter::weights[i] = particles[i].weight;
 	}
 }
