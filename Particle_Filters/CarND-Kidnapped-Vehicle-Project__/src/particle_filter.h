@@ -104,9 +104,6 @@ public:
 	* This can be a very useful debugging tool to make sure transformations are correct and assocations correctly connected
 	*/
 	Particle SetAssociations(Particle& best);
-	//    Particle SetAssociations(Particle& particle, const std::vector<int>& associations,
-	//                             const std::vector<double>& sense_x, const std::vector<double>& sense_y);
-
 
 	std::string getAssociations(Particle best);
 	std::string getSenseX(Particle best);

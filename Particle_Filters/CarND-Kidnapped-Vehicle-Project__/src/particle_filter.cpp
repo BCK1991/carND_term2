@@ -157,56 +157,25 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 }
 
 void ParticleFilter::resample() {
-	// TODO: Resample particles with replacement with probability proportional to their weight. 
-	// NOTE: You may find std::discrete_distribution helpful here.
-	//   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
+	// Using C++ std's 'discrete_distribution' function here to update the particle's posterior.
 
-	//    default_random_engine DRE;
-	//    random_device rd;
-	//    mt19937 DRE(rd());
-
-	discrete_distribution<> d(ParticleFilter::weights.begin(), ParticleFilter::weights.end());
+	discrete_distribution<> d_dist(ParticleFilter::weights.begin(), ParticleFilter::weights.end());
 	vector<Particle> resampled_particles;
 	for (int i = 0; i < ParticleFilter::num_particles; i++)
 	{
-		resampled_particles.push_back(particles[d(DRE)]);
+		resampled_particles.push_back(particles[d_dist(DRE)]);
 	}
 	particles = resampled_particles;
-	d.reset();
-
-	/*      ####################################################        */
-	/*                          RESAMPLING WHEEL                        */
-	/*
-	double w_max = *max_element(ParticleFilter::weights.begin(), ParticleFilter::weights.end());
-	vector<Particle> resampled_particles;
-	//    default_random_engine DRE;
-	std::uniform_real_distribution<double> w_dist(0, 2*w_max);
-	double B;
-	int index = rand() % ParticleFilter::num_particles;
-	for (int i=0; i < ParticleFilter::num_particles; i++)
-	{
-	B = fmod(B+w_dist(DRE), 2*w_max);
-	while (B > ParticleFilter::weights[index])
-	{
-	B -= ParticleFilter::weights[index];
-	index = (index + 1) % ParticleFilter::num_particles;
-	}
-	resampled_particles.push_back(particles[index]);
-	}
-	particles = resampled_particles;
-	*/
-	/*      ####################################################        */
+	d_dist.reset();
 }
 
+//Just passing the best particle here.
 Particle ParticleFilter::SetAssociations(Particle& best)
-//Particle ParticleFilter::SetAssociations(Particle& particle, const std::vector<int>& associations,
-//                                     const std::vector<double>& sense_x, const std::vector<double>& sense_y)
 {
 	//particle: the particle to assign each listed association, and association's (x,y) world coordinates mapping to
 	// associations: The landmark id that goes along with each listed association
 	// sense_x: the associations x mapping already converted to world coordinates
 	// sense_y: the associations y mapping already converted to world coordinates
-
 
 	vector<int> temp_associations;
 	vector<double> temp_sense_x;
@@ -222,11 +191,6 @@ Particle ParticleFilter::SetAssociations(Particle& best)
 	best.sense_y = temp_sense_y;
 
 	return best;
-
-	//    particle.associations = associations;
-	//    particle.sense_x = sense_x;
-	//    particle.sense_y = sense_y;
-	//    return particle;
 }
 
 string ParticleFilter::getAssociations(Particle best)
