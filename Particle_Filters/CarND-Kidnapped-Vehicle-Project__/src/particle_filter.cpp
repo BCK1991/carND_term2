@@ -100,39 +100,39 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
 	for (int i = 0; i < num_particles; i++)
 	{
-		particles[i].nn_associations = observations;
+		particles[i].data_associations = observations;
 		vector<LandmarkObs> temp;
 
-		for (int j = 0; j < particles[i].nn_associations.size(); j++)
+		for (int j = 0; j < particles[i].data_associations.size(); j++)
 		{
 			double range = sqrt(pow(observations[j].x, 2) + pow(observations[j].y, 2));
 			if (range < sensor_range)
 			{
-				particles[i].nn_associations[j].x = (observations[j].x * cos(particles[i].theta)) - (observations[j].y * sin(particles[i].theta)) + particles[i].x;
+				particles[i].data_associations[j].x = (observations[j].x * cos(particles[i].theta)) - (observations[j].y * sin(particles[i].theta)) + particles[i].x;
 
-				particles[i].nn_associations[j].y = (observations[j].x * sin(particles[i].theta)) + (observations[j].y * cos(particles[i].theta)) + particles[i].y;
+				particles[i].data_associations[j].y = (observations[j].x * sin(particles[i].theta)) + (observations[j].y * cos(particles[i].theta)) + particles[i].y;
 
-				temp.push_back(particles[i].nn_associations[j]);
+				temp.push_back(particles[i].data_associations[j]);
 			}
 		}
-		particles[i].nn_associations = temp;
+		particles[i].data_associations = temp;
 
 		// particles::associations function is implemented here
-		for (int j = 0; j < particles[i].nn_associations.size(); j++)
+		for (int j = 0; j < particles[i].data_associations.size(); j++)
 		{
 			//assign a big number to min_diff as starting value
 			double min_diff = 10000;
 			for (int k = 0; k < map_landmarks.landmark_list.size(); k++)
 			{
 				
-				delta_x = particles[i].nn_associations[j].x - map_landmarks.landmark_list[k].x_f;
-				delta_y = particles[i].nn_associations[j].y - map_landmarks.landmark_list[k].y_f;
+				delta_x = particles[i].data_associations[j].x - map_landmarks.landmark_list[k].x_f;
+				delta_y = particles[i].data_associations[j].y - map_landmarks.landmark_list[k].y_f;
 				diff = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
 
 				if (diff < min_diff)
 				{
 					min_diff = diff;
-					particles[i].nn_associations[j].id = map_landmarks.landmark_list[k].id_i;
+					particles[i].data_associations[j].id = map_landmarks.landmark_list[k].id_i;
 				}
 			}
 		}
@@ -140,12 +140,12 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		double normalization = 0.5 / (M_PI * std_landmark[0] * std_landmark[1]);
 		particles[i].weight = 1.0;
 		//multi-variant gaussian probability density function.
-		for (int j = 0; j < particles[i].nn_associations.size(); j++)
+		for (int j = 0; j < particles[i].data_associations.size(); j++)
 		{
-			Map::single_landmark_s landmark = map_landmarks.landmark_list[particles[i].nn_associations[j].id - 1];
-			double diff_x = particles[i].nn_associations[j].x - landmark.x_f;
+			Map::single_landmark_s landmark = map_landmarks.landmark_list[particles[i].data_associations[j].id - 1];
+			double diff_x = particles[i].data_associations[j].x - landmark.x_f;
 			double calculated_X = pow(diff_x, 2) / (2 * pow(std_landmark[0], 2));
-			double diff_y = particles[i].nn_associations[j].y - landmark.y_f;
+			double diff_y = particles[i].data_associations[j].y - landmark.y_f;
 			double calculated_Y = pow(diff_y, 2) / (2 * pow(std_landmark[1], 2));
 			double weight_temp = exp(-(calculated_X + calculated_Y)) * normalization;
 
@@ -180,11 +180,11 @@ Particle ParticleFilter::SetAssociations(Particle& best)
 	vector<int> temp_associations;
 	vector<double> temp_sense_x;
 	vector<double> temp_sense_y;
-	for (int j = 0; j < best.nn_associations.size(); j++)
+	for (int j = 0; j < best.data_associations.size(); j++)
 	{
-		temp_associations.push_back(best.nn_associations[j].id);
-		temp_sense_x.push_back(best.nn_associations[j].x);
-		temp_sense_y.push_back(best.nn_associations[j].y);
+		temp_associations.push_back(best.data_associations[j].id);
+		temp_sense_x.push_back(best.data_associations[j].x);
+		temp_sense_y.push_back(best.data_associations[j].y);
 	}
 	best.associations = temp_associations;
 	best.sense_x = temp_sense_x;

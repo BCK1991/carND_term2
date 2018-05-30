@@ -19,10 +19,12 @@ struct Particle {
 	double y;
 	double theta;
 	double weight;
-	std::vector<LandmarkObs> nn_associations;
+	
 	std::vector<int> associations;
 	std::vector<double> sense_x;
 	std::vector<double> sense_y;
+
+	std::vector<LandmarkObs> data_associations;
 };
 
 
