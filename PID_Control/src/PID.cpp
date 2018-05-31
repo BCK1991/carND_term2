@@ -29,7 +29,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
 	max_error = 0;
 	cte = 0;
 	cte_t_1 = 0;
-	loop_counter = 0;
+	loop_counter = 1;
 	dp = { 0.1*Kp, 0.1*Kd, 0.1*Ki };
 	validation_steps = 20;
 	dwell_steps = 5;
@@ -41,6 +41,8 @@ void PID::Init(double Kp, double Ki, double Kd) {
 
 void PID::UpdateError(double cte) {
 	cout << "cte : " << cte << endl;
+	if (loop_counter == 1)
+		cte_t_1 = cte;
 	p_error = cte;
 	i_error += cte;
 	d_error = cte - cte_t_1;
@@ -53,7 +55,7 @@ void PID::UpdateError(double cte) {
 double PID::TotalError(bool print, bool twiddle) {
 
 	if ((loop_counter % (validation_steps + dwell_steps) > dwell_steps)){
-		total_error += pow(cte, 2);
+		total_error = total_error + cte * cte;
 		cout << "total_error : " << total_error << endl;
 	}
 	
