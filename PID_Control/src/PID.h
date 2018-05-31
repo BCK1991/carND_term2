@@ -9,6 +9,10 @@ public:
   double p_error;
   double i_error;
   double d_error;
+  double total_error;
+  double min_error;
+  double max_error;
+
 
   /*
   * Coefficients
@@ -17,6 +21,13 @@ public:
   double Ki;
   double Kd;
 
+  /*
+  * Auxilary
+  */
+  bool dbgPrint;
+  double cte;
+  double cte_t_1;
+  int loop_counter;
   /*
   * Constructor
   */
@@ -40,7 +51,7 @@ public:
   /*
   * Calculate the total PID error.
   */
-  double TotalError();
+  double TotalError(bool print);
 };
 
 #endif /* PID_H */
