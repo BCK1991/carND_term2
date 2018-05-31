@@ -131,7 +131,7 @@ double PID::TotalError(bool print, bool twiddle) {
 		cout << "P: " << Kp << ", I: " << Ki << ", D: " << Kd << endl;
 
 	}
-	total_error = 0;
+	//total_error = 0;
 	loop_counter++;
 	//cout << "loop_counter : " << loop_counter << endl;
 	return total_error;
