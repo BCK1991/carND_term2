@@ -130,7 +130,7 @@ double PID::TotalError(bool print, bool twiddle) {
 	}
 	
 	loop_counter++;
-
+	cout << "loop_counter : " << loop_counter << endl;
 	return total_error;
 
 }
