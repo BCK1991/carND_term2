@@ -65,7 +65,12 @@ int main()
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 		  pid.UpdateError(cte);
 		  steer_value -= pid.TotalError(true);
-
+		  if (steer_value > 1) {
+			  steer_value = 1;
+		  }
+		  else if (steer_value < -1) {
+			  steer_value = -1;
+		  }
           json msgJson;
           msgJson["steering_angle"] = steer_value;
           msgJson["throttle"] = 0.3;
