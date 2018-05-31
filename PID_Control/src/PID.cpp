@@ -1,6 +1,7 @@
 #include "PID.h"
 #include <iostream>
 #include <cmath>
+#include <limits>
 using namespace std;
 
 /*
@@ -30,7 +31,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
 	loop_counter = 0;
 	dp = { 0.1*Kp, 0.1*Kd, 0.1*Ki };
 	validation_steps = 100;
-	dwell_steps = 1000
+	dwell_steps = 1000;
 	twiddle_increase = false;
 	twiddle_decrease = false;
 	idx_param = 2;
@@ -69,7 +70,7 @@ double PID::TotalError(bool print, bool twiddle) {
 
 		}
 
-		if (!twiddle_increase && !tried_decrease) {
+		if (!twiddle_increase && !twiddle_decrease) {
 			//First, try increasing
 			switch (idx_param){
 			case 0:
@@ -128,7 +129,7 @@ double PID::TotalError(bool print, bool twiddle) {
 
 	}
 	
-	loop_counter
+	loop_counter++;
 
 	return total_error;
 
