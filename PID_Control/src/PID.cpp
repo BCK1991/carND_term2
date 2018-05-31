@@ -104,7 +104,7 @@ double PID::TotalError(bool print, bool twiddle) {
 			}
 			twiddle_decrease = true;
 		}
-		else (twiddle_increase && twiddle_decrease) {
+		else {
 			//First, try increasing
 			switch (idx_param) {
 			case 0:
