@@ -114,13 +114,13 @@ double PID::TotalError(double cte, bool print, bool twiddle) {
 			//First, try increasing
 			switch (idx_param) {
 			case 0:
-				Kp = Kp - 2 * dp[idx_param];
+				Kp = Kp + dp[idx_param];
 				break;
 			case 1:
-				Kd = Kd - 2 * dp[idx_param];
+				Kd = Kd + dp[idx_param];
 				break;
 			case 2:
-				Ki = Ki - 2 * dp[idx_param];
+				Ki = Ki + dp[idx_param];
 				break;
 			default:
 				break;
@@ -129,16 +129,16 @@ double PID::TotalError(double cte, bool print, bool twiddle) {
 			idx_param = (idx_param + 1) % 3;
 			twiddle_increase = twiddle_decrease = false;
 		}
-		total_error = 0;
+		
 		cout << "loop_counter : " << loop_counter << endl;
 		
 		cout << "Update || " << "K_p: " << Kp << ", K_i: " << Ki << ", K_d: " << Kd << endl;
-
+		total_error = 0;
 	}
 	
 	loop_counter++;
 	//cout << "loop_counter : " << loop_counter << endl;
-	return total_error;
+	return total_error; // not used
 
 }
 
