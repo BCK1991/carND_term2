@@ -124,13 +124,14 @@ double PID::TotalError(bool print, bool twiddle) {
 			twiddle_increase = twiddle_decrease = false;
 		}
 		total_error = 0;
+		cout << "loop_counter : " << loop_counter << endl;
 		cout << "new parameters" << endl;
 		cout << "P: " << Kp << ", I: " << Ki << ", D: " << Kd << endl;
 
 	}
 	
 	loop_counter++;
-	cout << "loop_counter : " << loop_counter << endl;
+	//cout << "loop_counter : " << loop_counter << endl;
 	return total_error;
 
 }
