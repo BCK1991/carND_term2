@@ -40,7 +40,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
 }
 
 void PID::UpdateError(double cte) {
-	cout << "cte : " << cte << endl;
+	
 	if (loop_counter == 1)
 		cte_t_1 = cte;
 	p_error = cte;
@@ -55,6 +55,7 @@ void PID::UpdateError(double cte) {
 double PID::TotalError(bool print, bool twiddle) {
 
 	if (loop_counter % (validation_steps + dwell_steps) > dwell_steps){
+		cout << "cte : " << cte << endl;
 		total_error += pow(cte, 2);
 		cout << "total_error : " << total_error << endl;
 	}
