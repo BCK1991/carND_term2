@@ -34,17 +34,11 @@ int main()
 
   PID pid;
   // TODO: Initialize the pid variable.
-  // taken from PID control lecture - > 11. PID implementation
-  //pid.Init(0.2, 0.01, 0.1);
-  //iterations : 225 -> P: 0.2662, I: 0.0121, D: 0.1331
-	//Iteration: 225 | Total Error : 0.698759 | Best : 0.907001
-	//p_error : -0.3793 | i_error : 119.989 | d_error : -0.0164
-  //pid.Init(0.27, 0.012, 0.13);
-  /*P: 0.35937, I: 0.01452, D: 0.17303
-Iteration : 225 |  Total Error : 0.106589 |  Best : 1.71259
-p_error : -0.1071 |  i_error : 128.424 |  d_error : -0.0132*/
-  //pid.Init(0.35, 0.015, 0.18);
-  pid.Init(0.1, 0.05, 1.0);
+
+  //pid.Init(0.1, 0.05, 1.0);
+  /*loop_counter : 650
+	Update || K_p: 0.11, K_i: 0.05, K_d: 1 => increase K_p*/
+  pid.Init(0.2, 0.05, 1.0);
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
