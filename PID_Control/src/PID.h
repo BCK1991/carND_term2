@@ -28,6 +28,11 @@ public:
   double cte;
   double cte_t_1;
   int loop_counter;
+  std::vector<double> dp;
+  int validation_steps;
+  int dwell_steps;
+  bool twiddle_increase;
+  bool twiddle_decrease;
   /*
   * Constructor
   */
@@ -51,7 +56,7 @@ public:
   /*
   * Calculate the total PID error.
   */
-  double TotalError(bool print);
+  double TotalError(bool print, bool twiddle);
 };
 
 #endif /* PID_H */

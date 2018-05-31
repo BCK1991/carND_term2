@@ -64,7 +64,8 @@ int main()
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 		  pid.UpdateError(cte);
-		  steer_value -= pid.TotalError(true);
+		  pid::TotalError(true,true);
+		  steer_value = -p_error * Kp - i_error * Ki - d_error * Kd;
 		  if (steer_value > 1) {
 			  steer_value = 1;
 		  }
