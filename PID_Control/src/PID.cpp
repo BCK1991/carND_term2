@@ -30,8 +30,8 @@ void PID::Init(double Kp, double Ki, double Kd) {
 	cte_t_1 = 0;
 	loop_counter = 0;
 	dp = { 0.1*Kp, 0.1*Kd, 0.1*Ki };
-	validation_steps = 100;
-	dwell_steps = 1000;
+	validation_steps = 5;
+	dwell_steps = 20;
 	twiddle_increase = false;
 	twiddle_decrease = false;
 	idx_param = 2;
