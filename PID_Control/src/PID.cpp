@@ -131,8 +131,8 @@ double PID::TotalError(double cte, bool print, bool twiddle) {
 		}
 		total_error = 0;
 		cout << "loop_counter : " << loop_counter << endl;
-		cout << "new parameters" << endl;
-		cout << "P: " << Kp << ", I: " << Ki << ", D: " << Kd << endl;
+		
+		cout << "Update || " << "K_p: " << Kp << ", K_i: " << Ki << ", K_d: " << Kd << endl;
 
 	}
 	
