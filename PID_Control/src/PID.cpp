@@ -46,8 +46,10 @@ double PID::TotalError(bool print) {
 
 	if (total_error < min_error)
 		min_error = total_error;
-	if (print)
-		std::cout << "Iteration : " << loop_counter << "Total Error : " << total_error << "Best : " << min_error << std::endl;
+	if (print){
+		std::cout << "Iteration : " << loop_counter << " |  Total Error : " << total_error << " |  Best : " << min_error << std::endl;
+		std::cout << "p_error : " << p_error << " |  i_error : " << i_error << " |  d_error : " << d_error << std::endl;
+	}
 	return total_error;
 
 }
