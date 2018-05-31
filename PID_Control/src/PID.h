@@ -58,7 +58,7 @@ public:
   /*
   * Calculate the total PID error.
   */
-  double TotalError(bool print, bool twiddle);
+  double TotalError(double cte, bool print, bool twiddle);
 };
 
 #endif /* PID_H */

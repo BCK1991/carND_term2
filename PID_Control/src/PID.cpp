@@ -52,7 +52,7 @@ void PID::UpdateError(double cte) {
 
 }
 
-double PID::TotalError(bool print, bool twiddle) {
+double PID::TotalError(double cte, bool print, bool twiddle) {
 
 	if (loop_counter % (validation_steps + dwell_steps) > dwell_steps){
 		cout << "cte : " << cte << endl;
