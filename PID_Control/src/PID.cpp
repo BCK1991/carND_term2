@@ -1,5 +1,6 @@
 #include "PID.h"
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 /*
@@ -32,6 +33,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
 	dwell_steps = 1000
 	twiddle_increase = false;
 	twiddle_decrease = false;
+	idx_param = 2;
 
 }
 
@@ -49,7 +51,7 @@ void PID::UpdateError(double cte) {
 double PID::TotalError(bool print, bool twiddle) {
 
 	if ((loop_counter % (validation_steps + dwell_steps) > 0))
-		total_error = += pow(cte, 2);
+		total_error += pow(cte, 2);
 	
 	if (twiddle && (loop_counter % (validation_steps + dwell_steps) == 0)){
 		std::cout << "Iteration : " << loop_counter << " |  Total Error : " << total_error << " |  Best : " << min_error << std::endl;
@@ -58,26 +60,26 @@ double PID::TotalError(bool print, bool twiddle) {
 		if (total_error < min_error) {
 			std::cout << "Correcting... \n" << std::endl;
 			min_error = total_error;
-			if (step != validation_steps + dwell_steps){
-				dp[param_index] *= 1.1;
+			if (loop_counter != validation_steps + dwell_steps){
+				dp[idx_param] *= 1.1;
 			}
 
-			param_index = (param_index + 1) % 3;
+			idx_param = (idx_param + 1) % 3;
 			twiddle_increase = twiddle_decrease = false;
 
 		}
 
 		if (!twiddle_increase && !tried_decrease) {
 			//First, try increasing
-			switch (param_index){
+			switch (idx_param){
 			case 0:
-				Kp = Kp + dp[param_index];
+				Kp = Kp + dp[idx_param];
 				break;
 			case 1:
-				Kd = Kd + dp[param_index];
+				Kd = Kd + dp[idx_param];
 				break;
 			case 2:
-				Ki = Ki + dp[param_index];
+				Ki = Ki + dp[idx_param];
 				break;
 			default:
 				break;
@@ -86,15 +88,15 @@ double PID::TotalError(bool print, bool twiddle) {
 		}
 		else if (twiddle_increase && !twiddle_decrease) {
 			//Then, try decreasing
-			switch (param_index) {
+			switch (idx_param) {
 			case 0:
-				Kp = Kp - 2 * dp[param_index];
+				Kp = Kp - 2 * dp[idx_param];
 				break;
 			case 1:
-				Kd = Kd - 2 * dp[param_index];
+				Kd = Kd - 2 * dp[idx_param];
 				break;
 			case 2:
-				Ki = Ki - 2 * dp[param_index];
+				Ki = Ki - 2 * dp[idx_param];
 				break;
 			default:
 				break;
@@ -103,21 +105,21 @@ double PID::TotalError(bool print, bool twiddle) {
 		}
 		else (twiddle_increase && twiddle_decrease) {
 			//First, try increasing
-			switch (param_index) {
+			switch (idx_param) {
 			case 0:
-				Kp = Kp - 2 * dp[param_index];
+				Kp = Kp - 2 * dp[idx_param];
 				break;
 			case 1:
-				Kd = Kd - 2 * dp[param_index];
+				Kd = Kd - 2 * dp[idx_param];
 				break;
 			case 2:
-				Ki = Ki - 2 * dp[param_index];
+				Ki = Ki - 2 * dp[idx_param];
 				break;
 			default:
 				break;
 			}
-			dp[param_index] *= 0.9;
-			param_index = (param_index + 1) % 3;
+			dp[idx_param] *= 0.9;
+			idx_param = (idx_param + 1) % 3;
 			twiddle_increase = twiddle_decrease = false;
 		}
 		total_error = 0;

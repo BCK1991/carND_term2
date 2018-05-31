@@ -1,5 +1,6 @@
 #ifndef PID_H
 #define PID_H
+#include <vector>
 
 class PID {
 public:
@@ -33,6 +34,7 @@ public:
   int dwell_steps;
   bool twiddle_increase;
   bool twiddle_decrease;
+  int idx_param;
   /*
   * Constructor
   */
