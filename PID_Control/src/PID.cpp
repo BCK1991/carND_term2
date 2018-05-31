@@ -55,12 +55,10 @@ void PID::UpdateError(double cte) {
 double PID::TotalError(double cte, bool print, bool twiddle) {
 
 	if (loop_counter % (validation_steps + dwell_steps) > dwell_steps){
-		cout << "cte : " << cte << endl;
+
 		total_error += pow(cte, 2);
-		cout << "total_error : " << total_error << endl;
+
 	}
-	total_error += pow(cte, 2);
-	cout << "total_error : " << total_error << endl;
 	
 	if (twiddle && (loop_counter % (validation_steps + dwell_steps) == 0)){
 		std::cout << "Iteration : " << loop_counter << " |  Total Error : " << total_error << " |  Best : " << min_error << std::endl;
@@ -131,13 +129,13 @@ double PID::TotalError(double cte, bool print, bool twiddle) {
 			idx_param = (idx_param + 1) % 3;
 			twiddle_increase = twiddle_decrease = false;
 		}
-		
+		total_error = 0;
 		cout << "loop_counter : " << loop_counter << endl;
 		cout << "new parameters" << endl;
 		cout << "P: " << Kp << ", I: " << Ki << ", D: " << Kd << endl;
 
 	}
-	//total_error = 0;
+	
 	loop_counter++;
 	//cout << "loop_counter : " << loop_counter << endl;
 	return total_error;
