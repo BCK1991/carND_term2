@@ -25,6 +25,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
 	i_error = 0.0;
 	d_error = 0.0;
 	min_error = std::numeric_limits<double>::max();
+	total_error = 0;
 	max_error = 0;
 	cte = 0;
 	cte_t_1 = 0;
