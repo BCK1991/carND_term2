@@ -99,11 +99,9 @@ int main() {
           
           */
 		  vector<double> x_location;
-		  vector<double> waypoints_y;
+		  vector<double> y_location;
 
-		  // transform waypoints to be from car's perspective
-		  // this means we can consider px = 0, py = 0, and psi = 0
-		  // greatly simplifying future calculations
+		  // transformation from map to car's coordinates (based on the discussions from the Udacity Forum discussions)
 		  for (int i = 0; i < ptsx.size(); i++) {
 			  double dx = ptsx[i] - px;
 			  double dy = ptsy[i] - py;
@@ -117,7 +115,7 @@ int main() {
 		  Eigen::Map<Eigen::VectorXd> y_location_eigen(ptry, 6);
 
 		  //3rd order polynomial coefficients
-		  auto coeffs = polyfit(x_location_eigeng, y_location_eigen, 3);
+		  auto coeffs = polyfit(x_location_eigen, y_location_eigen, 3);
 		  //evaluating the coefficients
 		  double cte = polyeval(coeffs, 0);  
 
