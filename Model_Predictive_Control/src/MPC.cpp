@@ -32,7 +32,7 @@ size_t delta_offset = epsilon_offset + N;
 size_t a_offset = delta_offset + N - 1;
 
 //array to hold all coefficients related to the cost
-int cost_coeff[8] = {1,3000,3000,5,5,700,200,10}; 
+int cost_coeff[8] = {1,2000,2000,5,5,400,200,10}; 
 
 //reference car speed to keep the car running (preventing the situtation error = 0 and car stops)
 double v_reference = 70.0;
