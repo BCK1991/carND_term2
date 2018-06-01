@@ -6,8 +6,9 @@ The system uses kinematic model to model the vehicle at hand.
 
 [//]: # (Image References)
 
-[image1]: ./P1_Undist_Chess.jpg "Undisturbed Chess Board"
-[image2]: ./P2_InputImg.jpg "Test Image"
+[image1]: ./Kinematic_Model_Eq.JPG "Kinematic_Model_Eq"
+[image2]: ./cte_eq.JPG "cte_eq"
+[image3]: ./psi_eq.JPG "psi_eq"
 
 ## Student describes their model in detail. This includes the state, actuators and update equations.
 
