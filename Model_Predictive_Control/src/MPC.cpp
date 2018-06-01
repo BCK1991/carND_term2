@@ -29,7 +29,7 @@ size_t v_offset = psi_offset + N;
 size_t cte_offset = v_offset + N;
 size_t epsilon_offset = cte_offset + N;
 size_t delta_offset = epsilon_offset + N;
-size_t a_offset = delta_offset + N;
+size_t a_offset = delta_offset + N - 1;
 
 //array to hold all coefficients related to the cost
 int cost_coeff[8] = {1,3000,3000,5,5,700,200,10}; 
