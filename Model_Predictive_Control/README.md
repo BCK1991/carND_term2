@@ -1,7 +1,31 @@
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
----
+This project aims to develop a C++ based implementation of the Model Predictive Control system that would control a car in simulation environment to finish a track without causing any unexpected behaviour that would risk a human driver.
+The system uses kinematic model to model the vehicle at hand. 
+
+[//]: # (Image References)
+
+[image1]: ./P1_Undist_Chess.jpg "Undisturbed Chess Board"
+[image2]: ./P2_InputImg.jpg "Test Image"
+
+## Student describes their model in detail. This includes the state, actuators and update equations.
+
+The variables of the kinematic model are listed as follows:  Position (x,y), heading (ψ) and velocity (v) based on the lectures. A state vector would look : [x,y,ψ,v]
+
+Two actuators are given as steering angle (δ) and throttle(also covering braking) (a). The range of δ is [-25 25] and the throttle is [-1 1]. This is important to use these as constraints at a later point. The actuators vector would look like : [δ,a]
+
+To predict the next state of the vehicle, we used the kinematic model and simple laws of the motion. Followings equations are taken as the model equations for the implementation (from lectures):
+
+![alt text][image1]
+
+As the control parameter to track the error, cross track error (cte) and orientation error (ψ) are used. The cost functions are derived as follows in the lectures:
+
+![alt text][image2]
+![alt text][image3]
+
+
+
 
 ## Dependencies
 
