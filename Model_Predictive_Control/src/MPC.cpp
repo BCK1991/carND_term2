@@ -97,10 +97,11 @@ public:
 				a = vars[a_offset + t - 2];
 				delta = vars[delta_offset + t - 2];
 			}
-			//AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
-			AD<double> f0 = coeffs[0] + coeffs[1] * x0;
-			//AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
-			AD<double> psides0 = CppAD::atan(coeffs[1]);
+			//using 3rd order polynomial instead of first order in the Udacity Lectures
+			AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
+			//AD<double> f0 = coeffs[0] + coeffs[1] * x0;
+			AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
+			//AD<double> psides0 = CppAD::atan(coeffs[1]);
 			//**Define all contraints
 
 			//initial contraints
