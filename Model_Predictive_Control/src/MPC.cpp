@@ -178,7 +178,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   // Set all non-actuators upper and lowerlimits
   // to the max negative and positive values.
-  for (int i = 0; i < delta_start; i++) {
+  for (int i = 0; i < delta_offset; i++) {
 	  vars_lowerbound[i] = -1.0e19;
 	  vars_upperbound[i] = 1.0e19;
   }
@@ -186,14 +186,14 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // The upper and lower limits of delta are set to -25 and 25
   // degrees (values in radians).
   // NOTE: Feel free to change this to something else.
-  for (int i = delta_start; i < a_start; i++) {
+  for (int i = delta_offset; i < a_offset; i++) {
 	  vars_lowerbound[i] = -0.436332;
 	  vars_upperbound[i] = 0.436332;
   }
 
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
-  for (int i = a_start; i < n_vars; i++) {
+  for (int i = a_offset; i < n_vars; i++) {
 	  vars_lowerbound[i] = -1.0;
 	  vars_upperbound[i] = 1.0;
   }
@@ -251,12 +251,12 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // `solution.x[i]`.
   vector<double> return_sol;
 
-  return_sol.push_back(solution.x[delta_start]);
-  return_sol.push_back(solution.x[a_start]);
+  return_sol.push_back(solution.x[delta_offset]);
+  return_sol.push_back(solution.x[a_offset]);
 
   for (int i = 0; i < N - 1; i++) {
-	  return_sol.push_back(solution.x[x_start + i + 1]);
-	  return_sol.push_back(solution.x[y_start + i + 1]);
+	  return_sol.push_back(solution.x[x_offset + i + 1]);
+	  return_sol.push_back(solution.x[y_offset + i + 1]);
   }
 
   // {...} is shorthand for creating a vector, so auto x1 = {1.0,2.0}
