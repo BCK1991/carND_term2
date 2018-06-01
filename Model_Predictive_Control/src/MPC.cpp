@@ -6,8 +6,8 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-size_t N = 0;
-double dt = 0;
+size_t N = 10;
+double dt = 0.1;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -32,7 +32,7 @@ size_t delta_offset = epsilon_offset + N;
 size_t a_offset = delta_offset + N;
 
 //array to hold all coefficients related to the cost
-int cost_coeff[8] = {1,3000,2000,5,5,500,250,10}; 
+int cost_coeff[8] = {1,3000,3000,5,5,700,200,10}; 
 
 //reference car speed to keep the car running (preventing the situtation error = 0 and car stops)
 double v_reference = 30.0;
