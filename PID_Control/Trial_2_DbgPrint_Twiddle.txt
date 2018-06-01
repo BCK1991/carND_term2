@@ -1,0 +1,75 @@
+root@44f608cf8969:/work/carND_term2/PID_Control/build# ./pid
+Listening to port 4567
+Connected!!!
+Iteration : 650 |  Total Error : 398.119 |  Best : 1.79769e+3
+p_error : 0.2556 |  i_error : 73.2287 |  d_error : -0.0086
+Correcting...
+
+loop_counter : 650
+Update || K_p: 0.1452, K_i: 0.001, K_d: 3.3
+Iteration : 1300 |  Total Error : 58.6062 |  Best : 398.119
+p_error : -0.2144 |  i_error : 37.9662 |  d_error : -0.004
+Correcting...
+
+loop_counter : 1300
+Update || K_p: 0.1452, K_i: 0.001, K_d: 3.63
+Iteration : 1950 |  Total Error : 22.4934 |  Best : 58.6062
+p_error : 0.6287 |  i_error : 70.0743 |  d_error : -0.0004
+Correcting...
+
+loop_counter : 1950
+Update || K_p: 0.1452, K_i: 0.0011, K_d: 3.63
+Iteration : 2600 |  Total Error : 51.3123 |  Best : 22.4934
+p_error : 0.1974 |  i_error : 78.9706 |  d_error : 0.0041
+loop_counter : 2600
+Update || K_p: 0.1452, K_i: 0.0009, K_d: 3.63
+Iteration : 3250 |  Total Error : 36.2057 |  Best : 22.4934
+p_error : -0.1835 |  i_error : 84.3071 |  d_error : -0.0087
+loop_counter : 3250
+Update || K_p: 0.1452, K_i: 0.001, K_d: 3.63
+Iteration : 3900 |  Total Error : 48.9221 |  Best : 22.4934
+p_error : 0.0282 |  i_error : 17.1758 |  d_error : 0.0001
+loop_counter : 3900
+Update || K_p: 0.15972, K_i: 0.001, K_d: 3.63
+Iteration : 4550 |  Total Error : 187.01 |  Best : 22.4934
+p_error : -0.6694 |  i_error : 166.948 |  d_error : 0.01
+loop_counter : 4550
+Update || K_p: 0.13068, K_i: 0.001, K_d: 3.63
+Iteration : 5200 |  Total Error : 104.268 |  Best : 22.4934
+p_error : -1.2909 |  i_error : -35.3108 |  d_error : -0.0042
+loop_counter : 5200
+Update || K_p: 0.1452, K_i: 0.001, K_d: 3.63
+Iteration : 5850 |  Total Error : 331.699 |  Best : 22.4934
+p_error : 0.5683 |  i_error : 8.0308 |  d_error : 0.0009
+loop_counter : 5850
+Update || K_p: 0.1452, K_i: 0.001, K_d: 3.993
+Iteration : 6500 |  Total Error : 167.115 |  Best : 22.4934
+p_error : -0.6672 |  i_error : 141.237 |  d_error : 0.002
+loop_counter : 6500
+Update || K_p: 0.1452, K_i: 0.001, K_d: 3.267
+Iteration : 7150 |  Total Error : 31.2865 |  Best : 22.4934
+p_error : -0.0835 |  i_error : 85.4337 |  d_error : -0.0036
+loop_counter : 7150
+Update || K_p: 0.1452, K_i: 0.001, K_d: 3.63
+Iteration : 7800 |  Total Error : 10.0303 |  Best : 22.4934
+p_error : 0.1482 |  i_error : 39.9511 |  d_error : 0.0006
+Correcting...
+
+loop_counter : 7800
+Update || K_p: 0.158268, K_i: 0.001, K_d: 3.63
+Iteration : 8450 |  Total Error : 9.92035 |  Best : 10.0303
+p_error : -0.0761 |  i_error : 38.646 |  d_error : -0.0023
+Correcting...
+
+loop_counter : 8450
+Update || K_p: 0.158268, K_i: 0.001, K_d: 3.9567
+Iteration : 9100 |  Total Error : 5.41261 |  Best : 9.92035
+p_error : 0.1171 |  i_error : 43.4205 |  d_error : -0.0062
+Correcting...
+
+loop_counter : 9100
+Update || K_p: 0.158268, K_i: 0.001099, K_d: 3.9567
+Iteration : 9750 |  Total Error : 13.7139 |  Best : 5.41261
+p_error : -0.0577 |  i_error : 37.8203 |  d_error : 0.0068
+loop_counter : 9750
+Update || K_p: 0.158268, K_i: 0.000901, K_d: 3.9567

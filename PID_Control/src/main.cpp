@@ -39,8 +39,8 @@ int main()
   //pid.Init(0.25, 0.005, 3.0); -> overshoot observed, counterbalancing with decreasing P
   //pid.Init(0.15, 0.005, 3.0); ->overshoot observed, counterbalancing with decreasing P and decreasing I
   //pid.Init(0.12, 0.001, 3.0); -> see report for twiddle values
-  pid.Init(0.132, 0.001, 3.3);
-
+  //pid.Init(0.132, 0.001, 3.3); ->see report for twiddle values : Update || K_p : 0.158268, K_i : 0.001, K_d : 3.63
+  pid.Init(0.158, 0.001, 3.63);
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
