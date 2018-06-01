@@ -98,7 +98,7 @@ int main() {
           * Both are in between [-1, 1].
           
           */
-		  vector<double> waypoints_x;
+		  vector<double> x_location;
 		  vector<double> waypoints_y;
 
 		  // transform waypoints to be from car's perspective
@@ -107,26 +107,34 @@ int main() {
 		  for (int i = 0; i < ptsx.size(); i++) {
 			  double dx = ptsx[i] - px;
 			  double dy = ptsy[i] - py;
-			  waypoints_x.push_back(dx * cos(-psi) - dy * sin(-psi));
-			  waypoints_y.push_back(dx * sin(-psi) + dy * cos(-psi));
+			  x_location.push_back(dx * cos(-psi) - dy * sin(-psi));
+			  y_location.push_back(dx * sin(-psi) + dy * cos(-psi));
 		  }
 
-		  double* ptrx = &waypoints_x[0];
-		  double* ptry = &waypoints_y[0];
-		  Eigen::Map<Eigen::VectorXd> waypoints_x_eig(ptrx, 6);
-		  Eigen::Map<Eigen::VectorXd> waypoints_y_eig(ptry, 6);
+		  double* ptrx = &x_location[0];
+		  double* ptry = &y_location[0];
+		  Eigen::Map<Eigen::VectorXd> x_location_eigen(ptrx, 6);
+		  Eigen::Map<Eigen::VectorXd> y_location_eigen(ptry, 6);
 
-		  auto coeffs = polyfit(waypoints_x_eig, waypoints_y_eig, 3);
-		  double cte = polyeval(coeffs, 0);  // px = 0, py = 0
-		  double epsi = -atan(coeffs[1]);  // p
-          double steer_value;
-          double throttle_value;
+		  //3rd order polynomial coefficients
+		  auto coeffs = polyfit(x_location_eigeng, y_location_eigen, 3);
+		  //evaluating the coefficients
+		  double cte = polyeval(coeffs, 0);  
 
-          json msgJson;
-          // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
-          // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = throttle_value;
+		  double epsilon = -atan(coeffs[1]);  
+		  double steer_value = j[1]["steering_angle"];
+		  double throttle_value = j[1]["throttle"];
+
+          Eigen::VectorXd state(6);
+		  state << 0, 0, 0, v, cte, epsilon;
+		  auto vars = mpc.Solve(state, coeffs);
+		  steer_value = vars[0];
+		  throttle_value = vars[1];
+
+		  json msgJson;
+		  msgJson["steering_angle"] = steer_value / (deg2rad(25));
+		  msgJson["throttle"] = throttle_value;
+
 
           //Display the MPC predicted trajectory 
           vector<double> mpc_x_vals;
