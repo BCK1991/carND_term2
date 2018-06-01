@@ -35,7 +35,7 @@ size_t a_offset = delta_offset + N;
 int cost_coeff[8] = {1,3000,3000,5,5,700,200,10}; 
 
 //reference car speed to keep the car running (preventing the situtation error = 0 and car stops)
-double v_reference = 30.0;
+double v_reference = 70.0;
 
 class FG_eval {
 public:
@@ -97,10 +97,10 @@ public:
 				a = vars[a_offset + t - 2];
 				delta = vars[delta_offset + t - 2];
 			}
-			//AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
-			AD<double> f0 = coeffs[0] + coeffs[1] * x0;
-			//AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
-			AD<double> psides0 = CppAD::atan(coeffs[1]);
+			AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
+			//AD<double> f0 = coeffs[0] + coeffs[1] * x0;
+			AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
+			//AD<double> psides0 = CppAD::atan(coeffs[1]);
 			//**Define all contraints
 
 			//initial contraints
@@ -260,5 +260,5 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   // {...} is shorthand for creating a vector, so auto x1 = {1.0,2.0}
   // creates a 2 element double vector.
-  return {};
+  return return_sol;
 }
