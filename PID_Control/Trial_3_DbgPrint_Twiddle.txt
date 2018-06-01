@@ -1,0 +1,57 @@
+root@58f1f3c386a7:/work/carND_term2/PID_Control/build# ./pid
+Listening to port 4567
+Connected!!!
+Iteration : 650 |  Total Error : 385.306 |  Best : 1.79769e+30
+p_error : 1.1866 |  i_error : 26.1248 |  d_error : -0.0012
+Correcting...
+
+loop_counter : 650
+Update || K_p: 0.1738, K_i: 0.001, K_d: 3.63
+Iteration : 1300 |  Total Error : 96.1138 |  Best : 385.306
+p_error : 0.3344 |  i_error : 36.0179 |  d_error : -0.0016
+Correcting...
+
+loop_counter : 1300
+Update || K_p: 0.1738, K_i: 0.001, K_d: 3.993
+Iteration : 1950 |  Total Error : 16.2938 |  Best : 96.1138
+p_error : 0.07 |  i_error : 55.0664 |  d_error : 0.004
+Correcting...
+
+loop_counter : 1950
+Update || K_p: 0.1738, K_i: 0.0011, K_d: 3.993
+Iteration : 2600 |  Total Error : 47.6531 |  Best : 16.2938
+p_error : 0.4269 |  i_error : 76.2736 |  d_error : 0.0087
+loop_counter : 2600
+Update || K_p: 0.1738, K_i: 0.0009, K_d: 3.993
+Iteration : 3250 |  Total Error : 40.5609 |  Best : 16.2938
+p_error : -0.217 |  i_error : 74.3676 |  d_error : 0.0031
+loop_counter : 3250
+Update || K_p: 0.1738, K_i: 0.001, K_d: 3.993
+Iteration : 3900 |  Total Error : 32.8685 |  Best : 16.2938
+p_error : -0.4597 |  i_error : 67.7293 |  d_error : -0.0078
+loop_counter : 3900
+Update || K_p: 0.19118, K_i: 0.001, K_d: 3.993
+Iteration : 4550 |  Total Error : 28.2091 |  Best : 16.2938
+p_error : 0.0031 |  i_error : -2.8002 |  d_error : 0.0051
+loop_counter : 4550
+Update || K_p: 0.15642, K_i: 0.001, K_d: 3.993
+Iteration : 5200 |  Total Error : 162.689 |  Best : 16.2938
+p_error : -0.7184 |  i_error : 194.946 |  d_error : -0.0108
+loop_counter : 5200
+Update || K_p: 0.1738, K_i: 0.001, K_d: 3.993
+Iteration : 5850 |  Total Error : 55.7549 |  Best : 16.2938
+p_error : -0.355 |  i_error : 29.0731 |  d_error : -0.0129
+loop_counter : 5850
+Update || K_p: 0.1738, K_i: 0.001, K_d: 4.3923
+Iteration : 6500 |  Total Error : 317.624 |  Best : 16.2938
+p_error : 0.1965 |  i_error : -46.041 |  d_error : 0.0011
+loop_counter : 6500
+Update || K_p: 0.1738, K_i: 0.001, K_d: 3.5937
+Iteration : 7150 |  Total Error : 134.135 |  Best : 16.2938
+p_error : 0.7366 |  i_error : 165.923 |  d_error : -0.0124
+loop_counter : 7150
+Update || K_p: 0.1738, K_i: 0.001, K_d: 3.993
+Iteration : 7800 |  Total Error : 96.5874 |  Best : 16.2938
+p_error : 0.1876 |  i_error : 94.0459 |  d_error : 0.0013
+loop_counter : 7800
+Update || K_p: 0.1738, K_i: 0.00109, K_d: 3.993
