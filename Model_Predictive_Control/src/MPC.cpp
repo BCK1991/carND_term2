@@ -38,88 +38,89 @@ int cost_coeff[8] = {1,3000,2000,5,5,500,250,10};
 double v_reference = 30.0;
 
 class FG_eval {
- public:
-  // Fitted polynomial coefficients
-  Eigen::VectorXd coeffs;
-  FG_eval(Eigen::VectorXd coeffs) { this->coeffs = coeffs; }
+public:
+	// Fitted polynomial coefficients
+	Eigen::VectorXd coeffs;
+	FG_eval(Eigen::VectorXd coeffs) { this->coeffs = coeffs; }
 
-  typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
-  void operator()(ADvector& fg, const ADvector& vars) {
-    // TODO: implement MPC
-    // `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
-    // NOTE: You'll probably go back and forth between this function and
-    // the Solver function below.
+	typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
+	void operator()(ADvector& fg, const ADvector& vars) {
+		// TODO: implement MPC
+		// `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
+		// NOTE: You'll probably go back and forth between this function and
+		// the Solver function below.
 
-	  //reserve fg[0] for cost
-	  fg[0] = 0;
+		//reserve fg[0] for cost
+		fg[0] = 0;
 
-	  //**Define all cost functions
+		//**Define all cost functions
 
-	  //Reference state cost (from Udacity lectures)
-	  // the weights are tuned based on trial and error
-	  for (int i = 0; i < N; i++) {
-		  fg[0] += cost_coeff[0] * CppAD::pow(vars[v_offset + i] - v_reference, 2);
-		  fg[0] += cost_coeff[1] * CppAD::pow(vars[cte_offset + i], 2);
-		  fg[0] += cost_coeff[2] * CppAD::pow(vars[epsilon_offset + i], 2);
-		  
-	  }
-	  // Actuators cost (from Udacity lectures + cross cost function)
-	  for (int i = 0; i < N - 1; i++) {
-		  fg[0] += cost_coeff[3] * CppAD::pow(vars[delta_offset + i], 2);
-		  fg[0] += cost_coeff[4] * CppAD::pow(vars[a_offset + i], 2);
-		  fg[0] += cost_coeff[5] * CppAD::pow(vars[delta_offset + i] * vars[v_offset + i], 2); //cross cost functions to avoid problems while cornering
-	  }
+		//Reference state cost (from Udacity lectures)
+		// the weights are tuned based on trial and error
+		for (int i = 0; i < N; i++) {
+			fg[0] += cost_coeff[0] * CppAD::pow(vars[v_offset + i] - v_reference, 2);
+			fg[0] += cost_coeff[1] * CppAD::pow(vars[cte_offset + i], 2);
+			fg[0] += cost_coeff[2] * CppAD::pow(vars[epsilon_offset + i], 2);
 
-	  //Differential actuator costs (from Udacity lectures)
-	  for (int i = 0; i < N - 2; i++) {
-		  fg[0] += cost_coeff[6] * CppAD::pow(vars[delta_offset + i + 1] - vars[delta_offset + i], 2);
-		  fg[0] += cost_coeff[7] * CppAD::pow(vars[a_offset + i + 1] - vars[a_offset + i], 2);
-	  }
+		}
+		// Actuators cost (from Udacity lectures + cross cost function)
+		for (int i = 0; i < N - 1; i++) {
+			fg[0] += cost_coeff[3] * CppAD::pow(vars[delta_offset + i], 2);
+			fg[0] += cost_coeff[4] * CppAD::pow(vars[a_offset + i], 2);
+			fg[0] += cost_coeff[5] * CppAD::pow(vars[delta_offset + i] * vars[v_offset + i], 2); //cross cost functions to avoid problems while cornering
+		}
 
-	  //next state on time
-	for (int t = 1; t < N; t++) {
-		AD<double> x1 = vars[x_offset + t];
-		AD<double> x0 = vars[x_offset + t - 1];
-		AD<double> y1 = vars[y_offset + t];
-		AD<double> y0 = vars[y_offset + t - 1];
-		AD<double> psi1 = vars[psi_offset + t];
-		AD<double> psi0 = vars[psi_offset + t - 1];
-		AD<double> v1 = vars[v_offset + t];
-		AD<double> v0 = vars[v_offset + t - 1];
-		AD<double> cte1 = vars[cte_offset + t];
-		AD<double> cte0 = vars[cte_offset + t - 1];
-		AD<double> epsi1 = vars[epsilon_offset + t];
-		AD<double> epsi0 = vars[epsilon_offset + t - 1];
+		//Differential actuator costs (from Udacity lectures)
+		for (int i = 0; i < N - 2; i++) {
+			fg[0] += cost_coeff[6] * CppAD::pow(vars[delta_offset + i + 1] - vars[delta_offset + i], 2);
+			fg[0] += cost_coeff[7] * CppAD::pow(vars[a_offset + i + 1] - vars[a_offset + i], 2);
+		}
 
-		AD<double> a = vars[a_offset + t - 1];
-		AD<double> delta = vars[delta_offset + t - 1];
+		//next state on time
+		for (int t = 1; t < N; t++) {
+			AD<double> x1 = vars[x_offset + t];
+			AD<double> x0 = vars[x_offset + t - 1];
+			AD<double> y1 = vars[y_offset + t];
+			AD<double> y0 = vars[y_offset + t - 1];
+			AD<double> psi1 = vars[psi_offset + t];
+			AD<double> psi0 = vars[psi_offset + t - 1];
+			AD<double> v1 = vars[v_offset + t];
+			AD<double> v0 = vars[v_offset + t - 1];
+			AD<double> cte1 = vars[cte_offset + t];
+			AD<double> cte0 = vars[cte_offset + t - 1];
+			AD<double> epsi1 = vars[epsilon_offset + t];
+			AD<double> epsi0 = vars[epsilon_offset + t - 1];
+
+			AD<double> a = vars[a_offset + t - 1];
+			AD<double> delta = vars[delta_offset + t - 1];
 			if (t > 1) {   // use previous actuations (to account for latency)
 				a = vars[a_offset + t - 2];
 				delta = vars[delta_offset + t - 2];
+			}
+			//AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
+			AD<double> f0 = coeffs[0] + coeffs[1] * x0;
+			//AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
+			AD<double> psides0 = CppAD::atan(coeffs[1]);
+			//**Define all contraints
+
+			//initial contraints
+			fg[1 + x_offset] = vars[x_offset];
+			fg[1 + y_offset] = vars[y_offset];
+			fg[1 + psi_offset] = vars[psi_offset];
+			fg[1 + v_offset] = vars[v_offset];
+			fg[1 + cte_offset] = vars[cte_offset];
+			fg[1 + epsilon_offset] = vars[epsilon_offset];
+
+			//Model contraints
+			fg[1 + x_offset + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
+			fg[1 + y_offset + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
+			fg[1 + psi_offset + t] = psi1 - (psi0 - v0 / Lf * delta * dt);
+			fg[1 + v_offset + t] = v1 - (v0 + a * dt);
+			fg[1 + cte_offset + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
+			fg[1 + epsilon_offset + t] = epsi1 - ((psi0 - psides0) - v0 / Lf * delta * dt);
+
 		}
-		//AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
-		AD<double> f0 = coeffs[0] + coeffs[1] * x0;
-		//AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
-		AD<double> psides0 = CppAD::atan(coeffs[1]);
-	  //**Define all contraints
-
-	  //initial contraints
-	  fg[1 + x_offset] = vars[x_offset];
-	  fg[1 + y_offset] = vars[y_offset];
-	  fg[1 + psi_offset] = vars[psi_offset];
-	  fg[1 + v_offset] = vars[v_offset];
-	  fg[1 + cte_offset] = vars[cte_offset];
-	  fg[1 + epsilon_offset] = vars[epsilon_offset];
-
-	  //Model contraints
-	  fg[1 + x_offset + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
-	  fg[1 + y_offset + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
-	  fg[1 + psi_offset + t] = psi1 - (psi0 - v0 / Lf * delta * dt);
-	  fg[1 + v_offset + t] = v1 - (v0 + a * dt);
-	  fg[1 + cte_offset + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
-	  fg[1 + epsilon_offset + t] = epsi1 - ((psi0 - psides0) - v0 / Lf * delta * dt);
-
-  }
+	}
 };
 
 //
