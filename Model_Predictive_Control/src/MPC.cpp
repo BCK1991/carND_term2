@@ -21,6 +21,22 @@ double dt = 0;
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
+//determining the offsets/incides for fg - the vector of the constraints (steps of N per contraint)
+size_t x_offset = 0;
+size_t y_offset = x_offset + N;
+size_t psi_offset = y_offset + N;
+size_t v_offset = psi_offset + N;
+size_t cte_offset = v_offset + N;
+size_t epsilon_offset = cte_offset + N;
+size_t delta_offset = epsilon_offset + N;
+size_t a_offset = delta_offset + N;
+
+//array to hold all coefficients related to the cost
+int cost_coeff = {1,3000,2000,5,5,500,250,10}; 
+
+//reference car speed to keep the car running (preventing the situtation error = 0 and car stops)
+double v_reference = 30.0;
+
 class FG_eval {
  public:
   // Fitted polynomial coefficients
@@ -33,6 +49,44 @@ class FG_eval {
     // `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
     // NOTE: You'll probably go back and forth between this function and
     // the Solver function below.
+
+	  //reserve fg[0] for cost
+	  fg[0] = 0;
+
+	  //**Define all cost functions
+
+	  //Reference state cost (from Udacity lectures)
+	  // the weights are tuned based on trial and error
+	  for (int i = 0; i < N; i++) {
+		  fg[0] += cost_coeff[0] * CppAD::pow(vars[v_offset + i] - v_reference, 2);
+		  fg[0] += cost_coeff[1] * CppAD::pow(vars[cte_offset + i], 2);
+		  fg[0] += cost_coeff[2] * CppAD::pow(vars[epsilon_offset + i], 2);
+		  
+	  }
+	  // Actuators cost (from Udacity lectures + cross cost function)
+	  for (int i = 0; i < N - 1; i++) {
+		  fg[0] += cost_coeff[3] * CppAD::pow(vars[delta_offset + i], 2);
+		  fg[0] += cost_coeff[4] * CppAD::pow(vars[a_offset + i], 2);
+		  fg[0] += cost_coeff[5] * CppAD::pow(vars[delta_offset + i] * vars[v_offset + i], 2); //cross cost functions to avoid problems while cornering
+	  }
+
+	  //Differential actuator costs (from Udacity lectures)
+	  for (int i = 0; i < N - 2; i++) {
+		  fg[0] += cost_coeff[6] * CppAD::pow(vars[delta_offset + i + 1] - vars[delta_offset + i], 2);
+		  fg[0] += cost_coeff[7] * CppAD::pow(vars[a_offset + i + 1] - vars[a_offset + i], 2);
+	  }
+
+
+	  //**Define all contraints
+
+	  //iti
+	  fg[1 + x_offset] = vars[x_offset];
+	  fg[1 + y_offset] = vars[y_offset];
+	  fg[1 + psi_offset] = vars[psi_offset];
+	  fg[1 + v_offset] = vars[v_offset];
+	  fg[1 + cte_offset] = vars[cte_offset];
+	  fg[1 + epsilon_offset] = vars[epsilon_offset];
+
   }
 };
 
