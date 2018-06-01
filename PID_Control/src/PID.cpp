@@ -111,7 +111,7 @@ double PID::TotalError(double cte, bool print, bool twiddle) {
 			twiddle_decrease = true;
 		}
 		else {
-			//First, try increasing
+			//Finally, try to lower the epsilon
 			switch (idx_param) {
 			case 0:
 				Kp = Kp + dp[idx_param];
